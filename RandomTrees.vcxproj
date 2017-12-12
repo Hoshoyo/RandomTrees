@@ -128,10 +128,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\parser.cpp" />
+    <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\parser.h" />
+    <ClInclude Include="src\util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

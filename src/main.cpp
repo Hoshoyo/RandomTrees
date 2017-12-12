@@ -1,4 +1,5 @@
 #include "common.h"
+#include "parser.h"
 
 enum Tempo {
 	TEMPO_ENSOLARADO = 0,
@@ -86,6 +87,8 @@ r32 math_log(r32 n) {
 
 s32 main(s32 argc, s8** argv) 
 {
+	File_Data fdata = parse_file("res/haberman.data", 4);
+
 	const u32 data_length = sizeof(test_data) / sizeof(Data);
 	const u32 class_number = 2;
 	const u32 attrib_number = 4;
