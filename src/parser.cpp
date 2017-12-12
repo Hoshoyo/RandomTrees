@@ -3,6 +3,8 @@
 #define DYNAMIC_ARRAY_IMPLEMENT
 #include <dynamic_array.h>
 
+#define INT_MIN (-INT_MAX - 1)
+#define INT_MAX 2147483647
 #define FLT_MAX          3.402823466e+38F        // max value
 #define FLT_MIN          1.175494351e-38F        // min normalized positive value
 
@@ -235,14 +237,20 @@ internal void convert_attribute_types(Attribute* line_attribs, u32* value_types,
 			case VALUE_TYPE_INT: {
 				max_attribs[i].value_int = INT_MIN;
 				min_attribs[i].value_int = INT_MAX;
+				max_attribs[i].type = VALUE_TYPE_INT;
+				min_attribs[i].type = VALUE_TYPE_INT;
 			}break;
 			case VALUE_TYPE_FLOAT: {
 				max_attribs[i].value_float = -(FLT_MAX);
 				min_attribs[i].value_float = FLT_MAX;
+				max_attribs[i].type = VALUE_TYPE_FLOAT;
+				min_attribs[i].type = VALUE_TYPE_FLOAT;
 			}break;
 			case VALUE_TYPE_CHAR: {
 				max_attribs[i].value_char = 'A';
 				min_attribs[i].value_char = 'Z';
+				max_attribs[i].type = VALUE_TYPE_CHAR;
+				min_attribs[i].type = VALUE_TYPE_CHAR;
 			}break;
 		}
 	}
@@ -360,6 +368,8 @@ extern File_Data parse_file(s8* filename, s32 attribs_num) {
 	result.attribs = line_attribs;
 	result.num_attribs = attribs_num;
 	result.lines = lines;
+	result.max_attribs = max_attribs;
+	result.min_attribs = min_attribs;
 	result.integrity = true;
 	return result;
 }

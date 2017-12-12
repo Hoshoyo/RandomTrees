@@ -85,9 +85,28 @@ r32 math_log(r32 n) {
 	return logf(n);
 }
 
+static void print_min_and_max(File_Data& fdata){
+	for(int i = 0; i < fdata.num_attribs; ++i){
+		switch(fdata.min_attribs[i].type){
+			case VALUE_TYPE_INT:{
+				printf("int   attrib %d min: %d, max: %d\n", i, fdata.min_attribs[i].value_int, fdata.max_attribs[i].value_int);
+			}break;
+			case VALUE_TYPE_FLOAT:{	
+				printf("float attrib %d min: %.02f, max: %.02f\n", i, fdata.min_attribs[i].value_float, fdata.max_attribs[i].value_float);
+			}break;
+			case VALUE_TYPE_CHAR:{
+				printf("char  attrib %d min: %c, max: %c\n", i, fdata.min_attribs[i].value_char, fdata.max_attribs[i].value_char);
+			}break;
+		}
+	}
+}
+
 s32 main(s32 argc, s8** argv) 
 {
-	File_Data fdata = parse_file("res/haberman.data", 4);
+	//if(argc > 1) {
+		File_Data fdata = parse_file((char*)"res/cmc.data", 10);
+		print_min_and_max(fdata);
+	//}
 
 	const u32 data_length = sizeof(test_data) / sizeof(Data);
 	const u32 class_number = 2;
