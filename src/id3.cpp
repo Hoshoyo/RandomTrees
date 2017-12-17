@@ -201,9 +201,13 @@ struct Data_Values {
 	// use free to release the memory
 	u32* attribs_value_type_count;
 
-	// Number of a type of value of an attribute per class
-	// array => [num_attributes][num_class] = (u32)
-	u32** attribs_count_per_type_class;
+	// Types of attributes in array [attribute index][attribute value type]
+	// use free to release attribute_types and iterate using array_release
+	// on the attribute value types of each attribute
+	Attribute** attribute_types;
+
+	// The number of different classes on the data set
+	u32 num_classes;
 };
 
 Data_Values extract_data_from_filedata(File_Data* file_data) {
@@ -282,33 +286,44 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 			}
 		}
 	}
+	u32 num_attrib_type_values = 0;
 	for (u32 i = 0; i < num_attribs; ++i) {
 		size_t count = array_get_length(attribute_aux_counter[i]);
 		attribs_value_type_count[i] = count;
+		if (i != file_data->class_index)
+			num_attrib_type_values += count;
 	}
 	u32 num_classes = attribs_value_type_count[file_data->class_index];
-
-	u32* attribs_count_per_type_class = (u32*)calloc(num_attribs * num_classes, sizeof(u32));
-
-	for (s32 n = 0; n < num_entries; ++n) {
-		for (s32 a = 0; a < num_attribs; ++a) {
-			for (s32 k = 0; k < num_classes; ++k) {
-				Attribute* att = &file_data->attribs[num_attribs * n + a];
-				if(attribute_equal(att, ))
-				//attribs_count_per_type_class[a * num_attribs + k]
-			}
-		}
-	}
-
-	// Free arrays
-	for (u32 i = 0; i < num_attribs; ++i)
-		array_release(attribute_aux_counter[i]);
-	free(attribute_aux_counter);
 
 	Data_Values result;
 	result.max_attribs = max_attribs;
 	result.min_attribs = min_attribs;
+	result.attribute_types = attribute_aux_counter;
 	result.attribs_value_type_count = attribs_value_type_count;
-	//result.attribs_count_per_type_class = 0;
-	return {};
+	result.num_classes = num_classes;
+	return result;
+}
+
+void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
+	u32 class_number = data_values->num_classes;
+	u32 data_length = file_data->num_attribs;
+
+	// Calculate counts for the data set
+	u32* class_count = (u32*)calloc(class_number, sizeof(u32));
+	
+	{
+		u32 counter = 0;
+		for (u32 i = 0; i < data_length; ++i) {
+			if (file_data->attribs[file_data->class_index * file_data->num_attribs + i] == c)
+				counter += 1;
+		}
+		return counter;
+	}
+
+	// Calculate the Info(D) of the whole thing
+	r32 info_d = 0.0f;
+	for (u32 i = 0; i < class_number; ++i) {
+		r32 p_i = (r32)class_count[i] / (r32)data_length;
+		info_d += -(p_i * math_log(p_i) / math_log(2.0f));
+	}
 }
