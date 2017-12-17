@@ -17,7 +17,9 @@
 #define array_create(type, num) (type*)_array_create(num, sizeof(type))
 #define array_push(arr, data) _array_push((void**)&arr, data)
 #define array_emplace(arr) _array_emplace((void**)&arr)
+#define array_allocate(arr, num) _array_allocate((void**)&arr, num)
 
+HO_EXTERN void HO_API _array_allocate(void** array_, size_t num_elements);
 HO_EXTERN void* HO_API _array_create(int num_elements, size_t size);
 HO_EXTERN void HO_API _array_push(void** array_, void* data);
 HO_EXTERN size_t HO_API _array_emplace(void** array_);
@@ -117,6 +119,25 @@ HO_EXTERN size_t HO_API _array_emplace(void** array_)
 	base->length++;
 
 	return length;
+}
+
+HO_EXTERN void HO_API _array_allocate(void** array_, size_t num_elements) 
+{
+	array* base = (array*)((char*)*array_ - sizeof(array));
+	size_t capacity = base->capacity;
+	size_t length = base->length;
+	size_t size_element = base->size_element;
+
+	if (length == capacity || length + num_elements > capacity)
+	{
+		capacity += num_elements;
+		base->capacity = capacity;
+
+		void* new_mem = realloc(base, capacity * size_element + sizeof(array));
+		base = (array*)new_mem;
+		*array_ = (char*)new_mem + sizeof(array);
+	}
+	base->length += num_elements;
 }
 
 HO_EXTERN void HO_API array_scramble(void* array_) 

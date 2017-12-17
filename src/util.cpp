@@ -32,6 +32,10 @@ extern void flush_stream()
 	fflush(stdout);
 }
 
+r32 math_log(r32 n) {
+	return logf(n);
+}
+
 bool c_str_equal(const char* str1, const char* str2)
 {
 	const char* ptr = str1;

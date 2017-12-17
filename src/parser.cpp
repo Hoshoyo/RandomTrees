@@ -3,11 +3,6 @@
 #define DYNAMIC_ARRAY_IMPLEMENT
 #include <dynamic_array.h>
 
-#define INT_MIN (-INT_MAX - 1)
-#define INT_MAX 2147483647
-#define FLT_MAX          3.402823466e+38F        // max value
-#define FLT_MIN          1.175494351e-38F        // min normalized positive value
-
 #define internal static
 
 internal s64 str_to_s64(char* text, int length)
@@ -205,8 +200,17 @@ internal void update_value_types(u32* value_types, s32 attrib_index, u32 value) 
 
 }
 
-internal void update_max_attribute(Attribute* max_attribs, s32 attrib_index, Attribute* attrib) {
-
+bool attribute_equal(Attribute* a1, Attribute* a2) {
+	switch (a1->type) {
+	case VALUE_TYPE_INT:
+		return (a1->value_int == a2->value_int);
+	case VALUE_TYPE_FLOAT:
+		return (a1->value_float == a2->value_float);
+	case VALUE_TYPE_CHAR:
+		return (a1->value_char == a2->value_char);
+	default:
+		return false;
+	}
 }
 
 //
@@ -219,8 +223,12 @@ internal void update_max_attribute(Attribute* max_attribs, s32 attrib_index, Att
 // num_attribs		: (in) number of attributes of an instance including the class
 // max_attribs		: (in/out) the array to be filled with the maximum value of each attribute
 // min_attribs		: (in/out) the array to be filled with the minimum value of each attribute
+// attribs_count	: (in/out) the array to be filled with the number of different values for each attribute
 //
-internal void convert_attribute_types(Attribute* line_attribs, u32* value_types, s32 num_attribs, Attribute* max_attribs, Attribute* min_attribs) {
+internal void convert_attribute_types(Attribute* line_attribs, u32* value_types, s32 num_attribs) {
+	//
+	// @TODO discretize real values
+	//
 	size_t num_entries = array_get_length(line_attribs);
 	for (s32 n = 0; n < num_entries; ++n) {
 		for (s32 i = 0; i < num_attribs; ++i) {
@@ -228,54 +236,6 @@ internal void convert_attribute_types(Attribute* line_attribs, u32* value_types,
 				s32 v = line_attribs[num_attribs * n + i].value_int;
 				line_attribs[num_attribs * n + i].value_float = (r32)v;
 				line_attribs[num_attribs * n + i].type = VALUE_TYPE_FLOAT;
-			}
-		}
-	}
-
-	for (s32 i = 0; i < num_attribs; ++i) {
-		switch (value_types[i]) {
-			case VALUE_TYPE_INT: {
-				max_attribs[i].value_int = INT_MIN;
-				min_attribs[i].value_int = INT_MAX;
-				max_attribs[i].type = VALUE_TYPE_INT;
-				min_attribs[i].type = VALUE_TYPE_INT;
-			}break;
-			case VALUE_TYPE_FLOAT: {
-				max_attribs[i].value_float = -(FLT_MAX);
-				min_attribs[i].value_float = FLT_MAX;
-				max_attribs[i].type = VALUE_TYPE_FLOAT;
-				min_attribs[i].type = VALUE_TYPE_FLOAT;
-			}break;
-			case VALUE_TYPE_CHAR: {
-				max_attribs[i].value_char = 'A';
-				min_attribs[i].value_char = 'Z';
-				max_attribs[i].type = VALUE_TYPE_CHAR;
-				min_attribs[i].type = VALUE_TYPE_CHAR;
-			}break;
-		}
-	}
-	
-	for (s32 n = 0; n < num_entries; ++n) {
-		for (s32 i = 0; i < num_attribs; ++i) {
-			switch (line_attribs[num_attribs * n + i].type) {
-				case VALUE_TYPE_INT: {
-					if (line_attribs[num_attribs * n + i].value_int > max_attribs[i].value_int)
-						max_attribs[i].value_int = line_attribs[num_attribs * n + i].value_int;
-					if (line_attribs[num_attribs * n + i].value_int < min_attribs[i].value_int)
-						min_attribs[i].value_int = line_attribs[num_attribs * n + i].value_int;
-				}break;
-				case VALUE_TYPE_FLOAT: {
-					if (line_attribs[num_attribs * n + i].value_float > max_attribs[i].value_float)
-						max_attribs[i].value_float = line_attribs[num_attribs * n + i].value_float;
-					if (line_attribs[num_attribs * n + i].value_float < min_attribs[i].value_float)
-						min_attribs[i].value_float = line_attribs[num_attribs * n + i].value_float;
-				}break;
-				case VALUE_TYPE_CHAR: {
-					if (line_attribs[num_attribs * n + i].value_char > max_attribs[i].value_char)
-						max_attribs[i].value_char = line_attribs[num_attribs * n + i].value_char;
-					if (line_attribs[num_attribs * n + i].value_char < min_attribs[i].value_char)
-						min_attribs[i].value_char = line_attribs[num_attribs * n + i].value_char;
-				}break;
 			}
 		}
 	}
@@ -293,6 +253,7 @@ internal void convert_attribute_types(Attribute* line_attribs, u32* value_types,
 
 	filename		: the path of the file to be parsed
 	attribs_num		: the number of attributes that the file contains per entry, including the class
+	class_index		: the index of the class attribute in the file
 
 	Return value:
 		A filled File_Data structure containing max and min values, all the data parsed into Attributes and
@@ -304,15 +265,13 @@ internal void convert_attribute_types(Attribute* line_attribs, u32* value_types,
 		- The field attribs is allocated using array_create and must be freed after use with array_release
 	
 */
-extern File_Data parse_file(s8* filename, s32 attribs_num) {
+extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 	File_Data result = {};
 	Token* tokens = tokenize(filename);
 	s32 token_count = 0;
 	s32 lines = 0;
 
 	Attribute* line_attribs = (Attribute*)_array_create(16, sizeof(Attribute) * attribs_num);
-	Attribute* max_attribs = (Attribute*)calloc(attribs_num, sizeof(Attribute));
-	Attribute* min_attribs = (Attribute*)calloc(attribs_num, sizeof(Attribute));
 
 	u32* value_types = (u32*)calloc(attribs_num, sizeof(u32));
 
@@ -361,16 +320,15 @@ extern File_Data parse_file(s8* filename, s32 attribs_num) {
 		lines += 1;
 	}
 
-	convert_attribute_types(line_attribs, value_types, attribs_num, max_attribs, min_attribs);
-	free(value_types);
+	convert_attribute_types(line_attribs, value_types, attribs_num);
 
 	array_release(tokens);
 	result.attribs = line_attribs;
 	result.num_attribs = attribs_num;
-	result.lines = lines;
-	result.max_attribs = max_attribs;
-	result.min_attribs = min_attribs;
+	result.num_entries = lines;
 	result.integrity = true;
+	result.class_index = class_index;
+	result.value_types = value_types;
 	return result;
 }
 

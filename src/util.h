@@ -47,7 +47,7 @@ extern s32 str_to_s32(char* text, int length);
 
 s32 str_to_s32(char* text, int length);
 s32 str_length(char* text);
-
+r32 math_log(r32 n);
 
 typedef struct PARAM_CONFIG
 {
