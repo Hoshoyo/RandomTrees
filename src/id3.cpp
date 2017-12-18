@@ -210,6 +210,8 @@ struct Data_Values {
 	u32 num_classes;
 };
 
+void calculate_data_gains(File_Data* file_data, Data_Values* data_values);
+
 Data_Values extract_data_from_filedata(File_Data* file_data) {
 	u32 num_attribs = file_data->num_attribs;
 	u32 num_entries = file_data->num_entries;
@@ -301,23 +303,26 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 	result.attribute_types = attribute_aux_counter;
 	result.attribs_value_type_count = attribs_value_type_count;
 	result.num_classes = num_classes;
+	calculate_data_gains(file_data, &result);
+
 	return result;
 }
 
 void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 	u32 class_number = data_values->num_classes;
-	u32 data_length = file_data->num_attribs;
+	u32 data_length = file_data->num_entries;
 
 	// Calculate counts for the data set
 	u32* class_count = (u32*)calloc(class_number, sizeof(u32));
 	
 	{
-		u32 counter = 0;
 		for (u32 i = 0; i < data_length; ++i) {
-			if (file_data->attribs[file_data->class_index * file_data->num_attribs + i] == c)
-				counter += 1;
+			for (u32 c = 0; c < class_number; ++c) {
+				if (attribute_equal(&file_data->attribs[i * file_data->num_attribs + file_data->class_index], &data_values->attribute_types[file_data->class_index][c])) {
+					class_count[c] += 1;
+				}
+			}
 		}
-		return counter;
 	}
 
 	// Calculate the Info(D) of the whole thing
@@ -326,4 +331,15 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 		r32 p_i = (r32)class_count[i] / (r32)data_length;
 		info_d += -(p_i * math_log(p_i) / math_log(2.0f));
 	}
+	
+	//u32 attrb_tempo_count_per_class[file_data->num_attribs][TEMPO_COUNT][class_number] = {};
+	u32 max_attrib_value_count = 0;
+	for (u32 i = 0; i < file_data->num_attribs; ++i) {
+		if (data_values->attribs_value_type_count[i] > max_attrib_value_count)
+			max_attrib_value_count = data_values->attribs_value_type_count[i];
+	}
+
+	u32*** attrb_count_per_class = (u32***)calloc(1, file_data->num_attribs * max_attrib_value_count * class_number);
+
+
 }
