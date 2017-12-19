@@ -206,6 +206,11 @@ struct Data_Values {
 	// on the attribute value types of each attribute
 	Attribute** attribute_types;
 
+	// Count of attributes for each type value in the array [attribute_index][attribute value type]
+	// use free to release attribute_types_data_count and iterate using array_release
+	// on the attribyte value types of each attribute
+	u32* attribute_types_data_count;
+
 	// The number of different classes on the data set
 	u32 num_classes;
 };
@@ -361,8 +366,19 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			assert(value_index != -1);	
 		}
 	}
-	printf("%d", attrb_count_per_class[0]);
-	printf("%d", attrb_count_per_class[1]);
-	printf("%d", attrb_count_per_class[2]);
+	r32 info_d_tempo = 0.0f;
+	u32 length_arr = array_get_length(data_values->attribute_types[0]);
+	for (u32 i = 0; i < length_arr; ++i) {
+		r32 t = 0.0f;
+		u32 all_classes_attrib_sum = 0;
 
+		for (u32 j = 0; j < class_number; ++j) {
+			r32 p_i = (r32)attrb_count_per_class[0 * file_data->num_attribs + i * length_arr + j] / (r32);
+			if (p_i == 0) continue;
+			t += -(p_i * math_log(p_i) / math_log(2.0f));
+		}
+		printf("%d\n", data_values->attribs_value_type_count[i]);
+		info_d_tempo += ((r32)data_values->attribs_value_type_count[i] / (r32)data_length) * t;
+	}
+	printf("infod tempo: %f\n", info_d_tempo);
 }
