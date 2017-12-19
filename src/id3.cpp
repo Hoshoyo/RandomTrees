@@ -308,6 +308,17 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 	return result;
 }
 
+s32 get_value_index(Attribute* attrib, u32 attrib_index, Attribute** attribute_types){
+	s32 length = array_get_length(attribute_types[attrib_index]);
+	assert(length > 0);
+	for(s32 i = 0; i < length; ++i){
+		if(attribute_equal(attrib, &attribute_types[attrib_index][i])){
+			return i;
+		}
+	}
+	return -1;
+}
+
 void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 	u32 class_number = data_values->num_classes;
 	u32 data_length = file_data->num_entries;
@@ -339,7 +350,19 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			max_attrib_value_count = data_values->attribs_value_type_count[i];
 	}
 
-	u32*** attrb_count_per_class = (u32***)calloc(1, file_data->num_attribs * max_attrib_value_count * class_number);
-
+	u32* attrb_count_per_class = (u32*)calloc(1, file_data->num_attribs * max_attrib_value_count * class_number * sizeof(u32));
+	for(u32 i = 0; i < data_length; ++i){
+		for(u32 a = 0; a <  file_data->num_attribs; ++a){
+			if(a == file_data->class_index)
+				continue;
+			s32 value_index = get_value_index(&file_data->attribs[i * file_data->num_attribs + a], a, data_values->attribute_types);
+			s32 class_index = get_value_index(&file_data->attribs[i * file_data->num_attribs + file_data->class_index], file_data->class_index, data_values->attribute_types);
+			attrb_count_per_class[a * file_data->num_attribs + value_index * max_attrib_value_count + class_index] += 1;
+			assert(value_index != -1);	
+		}
+	}
+	printf("%d", attrb_count_per_class[0]);
+	printf("%d", attrb_count_per_class[1]);
+	printf("%d", attrb_count_per_class[2]);
 
 }
