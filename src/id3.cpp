@@ -189,7 +189,6 @@ void test(File_Data* data) {
 	r32 gain_umidade = info_d - info_d_umidade;
 	r32 gain_ventoso = info_d - info_d_ventoso;
 }
-
 #endif
 
 struct Data_Values {
@@ -209,7 +208,7 @@ struct Data_Values {
 	// Count of attributes for each type value in the array [attribute_index][attribute value type]
 	// use free to release attribute_types_data_count and iterate using array_release
 	// on the attribyte value types of each attribute
-	u32* attribute_types_data_count;
+	u32** attribute_types_data_count;
 
 	// The number of different classes on the data set
 	u32 num_classes;
@@ -251,9 +250,12 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 
 	// Make an array in order to count how many different attribute values are for each attribute
 	Attribute** attribute_aux_counter = (Attribute**)calloc(num_attribs, sizeof(Attribute*));
+	u32** attribute_types_data_count = (u32**)calloc(num_attribs, sizeof(u32*));
 	for (u32 i = 0; i < num_attribs; ++i) {
 		attribute_aux_counter[i] = array_create(Attribute, 8);	// heuristic, expecting at most 8 different attribute values
+		attribute_types_data_count[i] = array_create(u32, 8);	// heuristic, expecting at most 8 different attribute values
 	}
+
 
 	for (s32 n = 0; n < num_entries; ++n) {
 		for (s32 i = 0; i < num_attribs; ++i) {
@@ -262,6 +264,7 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 			if (attrib_type_count > 0) {
 				for (u32 k = 0; k < attrib_type_count; ++k) {
 					if (attribute_equal(&file_data->attribs[num_attribs * n + i], &attribute_aux_counter[i][k])) {
+						attribute_types_data_count[i][k] += 1;
 						new_attrib = false;
 						break;
 					}
@@ -269,6 +272,9 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 			}
 			if (new_attrib) {
 				array_push(attribute_aux_counter[i], &file_data->attribs[num_attribs * n + i]);
+
+				u32 v = 1;	// start with 1
+				array_push(attribute_types_data_count[i], &v);
 			}
 
 			switch (file_data->attribs[num_attribs * n + i].type) {
@@ -308,6 +314,7 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 	result.attribute_types = attribute_aux_counter;
 	result.attribs_value_type_count = attribs_value_type_count;
 	result.num_classes = num_classes;
+	result.attribute_types_data_count = attribute_types_data_count;
 	calculate_data_gains(file_data, &result);
 
 	return result;
@@ -322,6 +329,10 @@ s32 get_value_index(Attribute* attrib, u32 attrib_index, Attribute** attribute_t
 		}
 	}
 	return -1;
+}
+
+u32 get_index(u32 x, u32 y, u32 z, u32 y_length, u32 z_length) {
+	return (x * y_length * z_length) + y * z_length + z;
 }
 
 void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
@@ -362,23 +373,37 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 				continue;
 			s32 value_index = get_value_index(&file_data->attribs[i * file_data->num_attribs + a], a, data_values->attribute_types);
 			s32 class_index = get_value_index(&file_data->attribs[i * file_data->num_attribs + file_data->class_index], file_data->class_index, data_values->attribute_types);
-			attrb_count_per_class[a * file_data->num_attribs + value_index * max_attrib_value_count + class_index] += 1;
+			u32 in = get_index(a, value_index, class_index, max_attrib_value_count, class_number);
+			attrb_count_per_class[in] += 1;
 			assert(value_index != -1);	
 		}
 	}
-	r32 info_d_tempo = 0.0f;
-	u32 length_arr = array_get_length(data_values->attribute_types[0]);
-	for (u32 i = 0; i < length_arr; ++i) {
-		r32 t = 0.0f;
-		u32 all_classes_attrib_sum = 0;
-
-		for (u32 j = 0; j < class_number; ++j) {
-			r32 p_i = (r32)attrb_count_per_class[0 * file_data->num_attribs + i * length_arr + j] / (r32);
-			if (p_i == 0) continue;
-			t += -(p_i * math_log(p_i) / math_log(2.0f));
+#if 0
+	for (u32 a = 0; a < file_data->num_attribs; ++a) {
+		for (u32 value_index = 0; value_index < max_attrib_value_count; ++value_index) {
+			for (u32 class_index = 0; class_index < class_number; ++class_index) {
+				printf("%d ", attrb_count_per_class[get_index(a, value_index, class_index, max_attrib_value_count, class_number)]);
+			}
+			printf("\n");
 		}
-		printf("%d\n", data_values->attribs_value_type_count[i]);
-		info_d_tempo += ((r32)data_values->attribs_value_type_count[i] / (r32)data_length) * t;
+		printf("\n");
 	}
-	printf("infod tempo: %f\n", info_d_tempo);
+#endif
+
+	for (u32 a = 0; a < file_data->num_attribs; ++a) {
+		r32 info_d_subattrib = 0.0f;
+		u32 num_value_types = array_get_length(data_values->attribute_types[a]);
+		for (u32 i = 0; i < num_value_types; ++i) {
+			r32 t = 0.0f;
+			for (u32 j = 0; j < class_number; ++j) {
+				u32 in = get_index(a, i, j, max_attrib_value_count, class_number);
+				r32 p_i = (r32)attrb_count_per_class[in] / (r32)data_values->attribute_types_data_count[a][i];
+				if (p_i == 0) continue;
+				t += -(p_i * math_log(p_i) / math_log(2.0f));
+			}
+			info_d_subattrib += ((r32)data_values->attribute_types_data_count[a][i] / (r32)data_length) * t;
+		}
+		//printf("infod info_d_subattrib %d: %f\n", a, info_d_subattrib);
+	}
+	int x = 0;
 }

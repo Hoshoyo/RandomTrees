@@ -6,6 +6,7 @@
 s32 main(s32 argc, s8** argv) 
 {
 	File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
+	//test(&fdata);
 	Data_Values values = extract_data_from_filedata(&fdata);
 
 
