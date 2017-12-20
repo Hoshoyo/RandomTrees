@@ -4,6 +4,7 @@
 
 #define internal static
 
+File_Data data_divide_on_attribute(u32 attribute_value, File_Data* in_data);
 #if 0
 typedef bool Class_Type;
 
@@ -214,6 +215,10 @@ struct Data_Values {
 
 	// The number of different classes on the data set
 	u32 num_classes;
+
+	// The index of the attribute which has the biggest gain of all
+	// used to create the root of the decision tree
+	u32 biggest_gain_index;
 };
 
 void calculate_data_gains(File_Data* file_data, Data_Values* data_values);
@@ -381,7 +386,10 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 		}
 	}
 
+	r32 max_gain = FLT_MIN;
 	for (u32 a = 0; a < file_data->num_attribs; ++a) {
+		if(a == file_data->class_index)
+			continue;
 		r32 info_d_subattrib = 0.0f;
 		u32 num_value_types = array_get_length(data_values->attribute_types[a]);
 		for (u32 i = 0; i < num_value_types; ++i) {
@@ -394,8 +402,41 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			}
 			info_d_subattrib += ((r32)data_values->attribute_types_data_count[a][i] / (r32)data_length) * t;
 		}
-		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
+		if(info_d - info_d_subattrib > max_gain){
+			max_gain = info_d - info_d_subattrib;
+			data_values->biggest_gain_index = a;
+		}
+		printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
+	printf("Buggest gain index = %d\n", data_values->biggest_gain_index);
+	data_divide_on_attribute(data_values->biggest_gain_index, file_data);
+}
+
+File_Data data_divide_on_attribute(u32 attribute_value, File_Data* in_data) {
+	File_Data result = {};
+	u32 num_attribs = in_data->num_attribs - 1;
+
+	Attribute* attribs = (Attribute*)_array_create(16, sizeof(Attribute) * num_attribs);
+	u32* value_types = (u32*)calloc(num_attribs, sizeof(u32));
+
+	size_t data_length = array_get_length(in_data->attribs);
+	for(size_t i = 0; i < data_length; ++i){
+		size_t index = array_emplace(attribs) * num_attribs;
+		for(u32 a = 0, att = 0; a < in_data->num_attribs; ++a){
+			if(a == attribute_value)
+				continue;
+			attribs[index + att] = in_data->attribs[i * in_data->num_attribs + a];
+			printf("%d ", attribs[index + att].value_int);
+			//printf("%d ", in_data->attribs[i * in_data->num_attribs + a].value_int);
+			att += 1;
+		}
+		printf("\n");
+	}
+
+	result.num_attribs = in_data->num_attribs - 1;
+	result.integrity = true;
+	result.class_index = (attribute_value < in_data->class_index) ? in_data->class_index - 1 : in_data->class_index;
+	return result;
 }
 
 #undef internal
