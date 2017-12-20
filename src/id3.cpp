@@ -2,6 +2,8 @@
 #include "util.h"
 #include <dynamic_array.h>
 
+#define internal static
+
 #if 0
 typedef bool Class_Type;
 
@@ -320,7 +322,7 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 	return result;
 }
 
-s32 get_value_index(Attribute* attrib, u32 attrib_index, Attribute** attribute_types){
+internal s32 get_value_index(Attribute* attrib, u32 attrib_index, Attribute** attribute_types){
 	s32 length = array_get_length(attribute_types[attrib_index]);
 	assert(length > 0);
 	for(s32 i = 0; i < length; ++i){
@@ -331,7 +333,7 @@ s32 get_value_index(Attribute* attrib, u32 attrib_index, Attribute** attribute_t
 	return -1;
 }
 
-u32 get_index(u32 x, u32 y, u32 z, u32 y_length, u32 z_length) {
+internal u32 get_index(u32 x, u32 y, u32 z, u32 y_length, u32 z_length) {
 	return (x * y_length * z_length) + y * z_length + z;
 }
 
@@ -378,17 +380,6 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			assert(value_index != -1);	
 		}
 	}
-#if 0
-	for (u32 a = 0; a < file_data->num_attribs; ++a) {
-		for (u32 value_index = 0; value_index < max_attrib_value_count; ++value_index) {
-			for (u32 class_index = 0; class_index < class_number; ++class_index) {
-				printf("%d ", attrb_count_per_class[get_index(a, value_index, class_index, max_attrib_value_count, class_number)]);
-			}
-			printf("\n");
-		}
-		printf("\n");
-	}
-#endif
 
 	for (u32 a = 0; a < file_data->num_attribs; ++a) {
 		r32 info_d_subattrib = 0.0f;
@@ -403,7 +394,8 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			}
 			info_d_subattrib += ((r32)data_values->attribute_types_data_count[a][i] / (r32)data_length) * t;
 		}
-		//printf("infod info_d_subattrib %d: %f\n", a, info_d_subattrib);
+		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
-	int x = 0;
 }
+
+#undef internal

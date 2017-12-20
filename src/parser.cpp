@@ -200,6 +200,8 @@ internal void update_value_types(u32* value_types, s32 attrib_index, u32 value) 
 
 }
 
+// this function return true if an Attribute is equal to another
+// and false otherwise
 bool attribute_equal(Attribute* a1, Attribute* a2) {
 	switch (a1->type) {
 	case VALUE_TYPE_INT:
@@ -213,18 +215,19 @@ bool attribute_equal(Attribute* a1, Attribute* a2) {
 	}
 }
 
-//
-// this function upgrades integer values to float values if one of the fields
-// in the data file suggests that field is a real number instead of an integer
-// it also calculates the max and min attributes for later normalization
-//
-// line_attribs		: (in) the array of parsed attributes
-// value_types		: (in) the array that contains the enum Value_Type of an attribute
-// num_attribs		: (in) number of attributes of an instance including the class
-// max_attribs		: (in/out) the array to be filled with the maximum value of each attribute
-// min_attribs		: (in/out) the array to be filled with the minimum value of each attribute
-// attribs_count	: (in/out) the array to be filled with the number of different values for each attribute
-//
+/*
+		This function upgrades integer values to float values if one of the fields
+	 in the data file suggests that field is a real number instead of an integer
+	 it also calculates the max and min attributes for later normalization
+
+	 line_attribs		: (in) the array of parsed attributes
+	 value_types		: (in) the array that contains the enum Value_Type of an attribute
+	 num_attribs		: (in) number of attributes of an instance including the class
+	 max_attribs		: (in/out) the array to be filled with the maximum value of each attribute
+	 min_attribs		: (in/out) the array to be filled with the minimum value of each attribute
+	 attribs_count		: (in/out) the array to be filled with the number of different values for each attribute
+*/
+
 internal void convert_attribute_types(Attribute* line_attribs, u32* value_types, s32 num_attribs) {
 	//
 	// @TODO discretize real values
