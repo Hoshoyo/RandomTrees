@@ -30,6 +30,12 @@ struct Attribute {
 };
 
 struct File_Data {
+	// Exemplo arquivo 4 atributos e 10 entries
+	// Pega 10 random com reposicao e monta um bootstrap
+	// Monta uma quantidade X de bootstraps cada um vai virar
+	// Uma árvore de decisão. Ou seja, florestas aleatórias
+	// [A A A A   B B B B    C C C C ...]
+	// [A A A A   A A A A    C C C C ...]  [B B B B]
 	Attribute* attribs;			// dynamic array -> array_release()		array count must be num_attribs * num_entries
 
 	s32 num_attribs;

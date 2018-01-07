@@ -4,196 +4,6 @@
 
 #define internal static
 
-File_Data data_divide_on_attribute(u32 attribute_value, File_Data* in_data);
-#if 0
-typedef bool Class_Type;
-
-enum Tempo {
-	TEMPO_ENSOLARADO = 0,
-	TEMPO_NUBLADO,
-	TEMPO_CHUVOSO,
-	TEMPO_COUNT,
-};
-
-enum Temperatura {
-	TEMPERATURA_QUENTE = 0,
-	TEMPERATURA_AMENA,
-	TEMPERATURA_FRIA,
-	TEMPERATURA_COUNT,
-};
-
-enum Umidade {
-	UMIDADE_ALTA = 0,
-	UMIDADE_NORMAL,
-	UMIDADE_COUNT,
-};
-
-enum Ventoso {
-	VENTOSO_SIM = 0,
-	VENTOSO_NAO,
-	VENTOSO_COUNT,
-};
-
-struct Data {
-	Tempo       tempo;
-	Temperatura temperatura;
-	Umidade     umidade;
-	Ventoso     ventoso;
-	bool        joga;	// classe
-};
-
-/*
-Tempo			Temperatura	Umidade		Ventoso			Joga
-1 Ensolarado		Quente		Alta		Falso			Nao
-2 Ensolarado		Quente		Alta		Verdadeiro		Nao
-3 Nublado			Quente		Alta		Falso			Sim
-4 Chuvoso			Amena		Alta		Falso			Sim
-5 Chuvoso			Fria		Normal		Falso			Sim
-6 Chuvoso			Fria		Normal		Verdadeiro		Nao
-7 Nublado			Fria		Normal		Verdadeiro		Sim
-8 Ensolarado		Amena		Alta		Falso			Nao
-9 Ensolarado		Fria		Normal		Falso			Sim
-A Chuvoso			Amena		Normal		Falso			Sim
-B Ensolarado		Amena		Normal		Verdadeiro		Sim
-C Nublado			Amena		Alta		Verdadeiro		Sim
-D Nublado			Quente		Normal		Falso			Sim
-E Chuvoso			Amena		Alta		Verdadeiro		Nao
-*/
-
-Data test_data[] = {
-	{ TEMPO_ENSOLARADO, TEMPERATURA_QUENTE, UMIDADE_ALTA,   VENTOSO_NAO, false },
-	{ TEMPO_ENSOLARADO, TEMPERATURA_QUENTE, UMIDADE_ALTA,   VENTOSO_SIM, false },
-	{ TEMPO_NUBLADO,    TEMPERATURA_QUENTE, UMIDADE_ALTA,   VENTOSO_NAO, true },
-	{ TEMPO_CHUVOSO,    TEMPERATURA_AMENA,  UMIDADE_ALTA,   VENTOSO_NAO, true },
-	{ TEMPO_CHUVOSO,    TEMPERATURA_FRIA,   UMIDADE_NORMAL, VENTOSO_NAO, true },
-	{ TEMPO_CHUVOSO,    TEMPERATURA_FRIA,   UMIDADE_NORMAL, VENTOSO_SIM, false },
-	{ TEMPO_NUBLADO,    TEMPERATURA_FRIA,   UMIDADE_NORMAL, VENTOSO_SIM, true },
-	{ TEMPO_ENSOLARADO, TEMPERATURA_AMENA,  UMIDADE_ALTA,   VENTOSO_NAO, false },
-	{ TEMPO_ENSOLARADO, TEMPERATURA_FRIA,   UMIDADE_NORMAL, VENTOSO_NAO, true },
-	{ TEMPO_CHUVOSO,    TEMPERATURA_AMENA,  UMIDADE_NORMAL, VENTOSO_NAO, true },
-	{ TEMPO_ENSOLARADO, TEMPERATURA_AMENA,  UMIDADE_NORMAL, VENTOSO_SIM, true },
-	{ TEMPO_NUBLADO,    TEMPERATURA_AMENA,  UMIDADE_ALTA,   VENTOSO_SIM, true },
-	{ TEMPO_NUBLADO,    TEMPERATURA_QUENTE, UMIDADE_NORMAL, VENTOSO_NAO, true },
-	{ TEMPO_CHUVOSO,    TEMPERATURA_AMENA,  UMIDADE_ALTA,   VENTOSO_SIM, false },
-};
-
-u32 data_class_count(Data* data, u32 data_length, bool c) {
-	u32 counter = 0;
-	for (u32 i = 0; i < data_length; ++i) {
-		if (data[i].joga == c)
-			counter += 1;
-	}
-	return counter;
-}
-
-// return 
-void test(File_Data* data) {
-
-	const u32 data_length = sizeof(test_data) / sizeof(Data);
-	const u32 class_number = 2;
-	const u32 attrib_number = 4;
-	Class_Type classes[class_number] = { true, false };
-
-	// Calculate counts for the data set
-	u32 class_count[class_number] = {};
-	for (u32 i = 0; i < class_number; ++i)
-		class_count[i] = data_class_count(test_data, data_length, classes[i]);
-
-	u32 attrb_tempo_count[TEMPO_COUNT] = {};
-	u32 attrb_temperatura_count[TEMPERATURA_COUNT] = {};
-	u32 attrb_umidade_count[UMIDADE_COUNT] = {};
-	u32 attrb_ventoso_count[VENTOSO_COUNT] = {};
-
-	u32 attrb_tempo_count_per_class[TEMPO_COUNT][class_number] = {};
-	u32 attrb_temperatura_count_per_class[TEMPERATURA_COUNT][class_number] = {};
-	u32 attrb_umidade_count_per_class[UMIDADE_COUNT][class_number] = {};
-	u32 attrb_ventoso_count_per_class[VENTOSO_COUNT][class_number] = {};
-
-	for (u32 i = 0; i < data_length; ++i) {
-		for (u32 a = 0; a < TEMPO_COUNT; ++a) {
-			bool is_tempo = test_data[i].tempo == a;
-			attrb_tempo_count[a] += (is_tempo) ? 1 : 0;
-			attrb_tempo_count_per_class[a][is_tempo && !(test_data[i].joga)] += is_tempo;
-		}
-		for (u32 a = 0; a < TEMPERATURA_COUNT; ++a) {
-			bool is_temperatura = test_data[i].temperatura == a;
-			attrb_temperatura_count[a] += (is_temperatura) ? 1 : 0;
-			attrb_temperatura_count_per_class[a][is_temperatura && !(test_data[i].joga)] += is_temperatura;
-		}
-		for (u32 a = 0; a < UMIDADE_COUNT; ++a) {
-			bool is_umidade = test_data[i].umidade == a;
-			attrb_umidade_count[a] += (is_umidade) ? 1 : 0;
-			attrb_umidade_count_per_class[a][is_umidade && !(test_data[i].joga)] += is_umidade;
-		}
-		for (u32 a = 0; a < VENTOSO_COUNT; ++a) {
-			bool is_ventoso = test_data[i].ventoso == a;
-			attrb_ventoso_count[a] += (is_ventoso) ? 1 : 0;
-			attrb_ventoso_count_per_class[a][is_ventoso && !(test_data[i].joga)] += is_ventoso;
-		}
-	}
-
-	// Calculate the Info(D) of the whole thing
-	r32 info_d = 0.0f;
-	for (u32 i = 0; i < class_number; ++i) {
-		r32 p_i = (r32)class_count[i] / (r32)data_length;
-		info_d += -(p_i * math_log(p_i) / math_log(2.0f));
-	}
-
-	// Calculate Info_Tempo(D)
-	r32 info_d_tempo = 0.0f;
-	for (u32 i = 0; i < TEMPO_COUNT; ++i) {
-		r32 t = 0.0f;
-		for (u32 j = 0; j < class_number; ++j) {
-			r32 p_i = (r32)attrb_tempo_count_per_class[i][j] / (r32)attrb_tempo_count[i];
-			if (p_i == 0) continue;
-			t += -(p_i * math_log(p_i) / math_log(2.0f));
-		}
-		info_d_tempo += ((r32)attrb_tempo_count[i] / (r32)data_length) * t;
-	}
-
-	// Calculate Info_Temperatura(D)
-	r32 info_d_temperatura = 0.0f;
-	for (u32 i = 0; i < TEMPERATURA_COUNT; ++i) {
-		r32 t = 0.0f;
-		for (u32 j = 0; j < class_number; ++j) {
-			r32 p_i = (r32)attrb_temperatura_count_per_class[i][j] / (r32)attrb_temperatura_count[i];
-			if (p_i == 0) continue;
-			t += -(p_i * math_log(p_i) / math_log(2.0f));
-		}
-		info_d_temperatura += ((r32)attrb_temperatura_count[i] / (r32)data_length) * t;
-	}
-
-	// Calculate Info_Umidade(D)
-	r32 info_d_umidade = 0.0f;
-	for (u32 i = 0; i < UMIDADE_COUNT; ++i) {
-		r32 t = 0.0f;
-		for (u32 j = 0; j < class_number; ++j) {
-			r32 p_i = (r32)attrb_umidade_count_per_class[i][j] / (r32)attrb_umidade_count[i];
-			if (p_i == 0) continue;
-			t += -(p_i * math_log(p_i) / math_log(2.0f));
-		}
-		info_d_umidade += ((r32)attrb_umidade_count[i] / (r32)data_length) * t;
-	}
-
-	// Calculate Info_Tempo(D)
-	r32 info_d_ventoso = 0.0f;
-	for (u32 i = 0; i < VENTOSO_COUNT; ++i) {
-		r32 t = 0.0f;
-		for (u32 j = 0; j < class_number; ++j) {
-			r32 p_i = (r32)attrb_ventoso_count_per_class[i][j] / (r32)attrb_ventoso_count[i];
-			if (p_i == 0) continue;
-			t += -(p_i * math_log(p_i) / math_log(2.0f));
-		}
-		info_d_ventoso += ((r32)attrb_ventoso_count[i] / (r32)data_length) * t;
-	}
-
-	r32 gain_tempo = info_d - info_d_tempo;
-	r32 gain_temperatura = info_d - info_d_temperatura;
-	r32 gain_umidade = info_d - info_d_umidade;
-	r32 gain_ventoso = info_d - info_d_ventoso;
-}
-#endif
-
 struct Data_Values {
 	Attribute* max_attribs;		// normal calloc -> free()				array count must be num_attribs
 	Attribute* min_attribs;		// normal calloc -> free()				array count must be num_attribs
@@ -221,7 +31,12 @@ struct Data_Values {
 	u32 biggest_gain_index;
 };
 
-void calculate_data_gains(File_Data* file_data, Data_Values* data_values);
+File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data);
+
+/*
+	This function returns true if entropy is different than 0 and false otherwise
+*/
+bool calculate_data_gains(File_Data* file_data, Data_Values* data_values);
 
 Data_Values extract_data_from_filedata(File_Data* file_data) {
 	u32 num_attribs = file_data->num_attribs;
@@ -322,7 +137,7 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 	result.attribs_value_type_count = attribs_value_type_count;
 	result.num_classes = num_classes;
 	result.attribute_types_data_count = attribute_types_data_count;
-	calculate_data_gains(file_data, &result);
+	//calculate_data_gains(file_data, &result);
 
 	return result;
 }
@@ -342,7 +157,7 @@ internal u32 get_index(u32 x, u32 y, u32 z, u32 y_length, u32 z_length) {
 	return (x * y_length * z_length) + y * z_length + z;
 }
 
-void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
+bool calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 	u32 class_number = data_values->num_classes;
 	u32 data_length = file_data->num_entries;
 
@@ -386,6 +201,8 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 		}
 	}
 
+	bool result = false;
+
 	r32 max_gain = FLT_MIN;
 	for (u32 a = 0; a < file_data->num_attribs; ++a) {
 		if(a == file_data->class_index)
@@ -405,37 +222,58 @@ void calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 		if(info_d - info_d_subattrib > max_gain){
 			max_gain = info_d - info_d_subattrib;
 			data_values->biggest_gain_index = a;
+			result = true;
 		}
 		printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
-	printf("Buggest gain index = %d\n", data_values->biggest_gain_index);
-	data_divide_on_attribute(data_values->biggest_gain_index, file_data);
+	if(result)
+		printf("Biggest gain index = %d\n", data_values->biggest_gain_index);
+	return result;
 }
 
-File_Data data_divide_on_attribute(u32 attribute_value, File_Data* in_data) {
-	File_Data result = {};
-	u32 num_attribs = in_data->num_attribs - 1;
+File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data) {
+	File_Data* result = 0;
 
-	Attribute* attribs = (Attribute*)_array_create(16, sizeof(Attribute) * num_attribs);
-	u32* value_types = (u32*)calloc(num_attribs, sizeof(u32));
+	u32 num_entries = in_data->num_entries;
+	u32 num_attribs = in_data->num_attribs;
+	u32 biggest_gain_index = data_values->biggest_gain_index;
+	u32 num_value_types_of_biggest_gain = data_values->attribs_value_type_count[biggest_gain_index];
+	// divide root being biggest_gain_index and num_value_types_of_biggest_gain branches
+	
+	result = array_create(File_Data, num_value_types_of_biggest_gain);
+	array_allocate(result, num_value_types_of_biggest_gain);
 
-	size_t data_length = array_get_length(in_data->attribs);
-	for(size_t i = 0; i < data_length; ++i){
-		size_t index = array_emplace(attribs) * num_attribs;
-		for(u32 a = 0, att = 0; a < in_data->num_attribs; ++a){
-			if(a == attribute_value)
-				continue;
-			attribs[index + att] = in_data->attribs[i * in_data->num_attribs + a];
-			printf("%d ", attribs[index + att].value_int);
-			//printf("%d ", in_data->attribs[i * in_data->num_attribs + a].value_int);
-			att += 1;
+	for (u32 i = 0; i < num_value_types_of_biggest_gain; ++i) {
+		result[i].attribs = array_create(Attribute, 16);
+		result[i].num_attribs = num_attribs - 1;
+		result[i].num_entries = 0;
+		// The class index is one less if it was originally after the biggest_gain_index, otherwise stays the same
+		result[i].class_index = (in_data->class_index <= biggest_gain_index) ? in_data->class_index : in_data->class_index - 1;
+		result[i].integrity = true;
+		result[i].value_types = (u32*)calloc(num_attribs - 1, sizeof(u32));
+		for (u32 j = 0, k = 0; j < num_attribs; ++k) {
+			if (k != biggest_gain_index) {
+				result[i].value_types[j] = in_data->value_types[k];
+				++j;
+			}
 		}
-		printf("\n");
 	}
 
-	result.num_attribs = in_data->num_attribs - 1;
-	result.integrity = true;
-	result.class_index = (attribute_value < in_data->class_index) ? in_data->class_index - 1 : in_data->class_index;
+	for (u32 i = 0; i < num_entries; ++i) {
+		for (u32 n = 0; n < num_attribs; ++n) {
+			if (n == biggest_gain_index) {
+				s32 index = in_data->attribs[i * num_attribs + n].value_int;
+				assert(index <= num_value_types_of_biggest_gain);
+				result[index].num_entries += 1;
+				for (u32 sub = 0; sub < num_attribs; ++sub) {
+					if (sub != biggest_gain_index) {
+						array_push(result[index].attribs, &in_data->attribs[i * num_attribs + sub]);
+					}
+				}
+			}
+		}
+	}
+
 	return result;
 }
 
