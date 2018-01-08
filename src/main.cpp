@@ -63,19 +63,37 @@ void print_original_nodes(Decision_Tree_Node* node) {
 	}
 }
 
-s32 main(s32 argc, s8** argv) 
+s32 main(s32 argc, s8** argv)
 {
 	File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
 
-	Decision_Tree_Node root_node = {};
-	root_node.node = &fdata;
+	const s32 num_bootstraps = 6;
 
-	generate_decision_tree(&root_node, &fdata);
+	Decision_Tree_Node roots[num_bootstraps] = {};
+	Bootstrap* bootstraps = bootstrap(fdata, num_bootstraps);
 
-	for (u32 i = 0; i < fdata.num_entries; ++i) {
-		Attribute result = decision_tree_get_class(&fdata.attribs[i * fdata.num_attribs], &root_node);
-		printf("%d result = %d\n", i, result.value_int);
+	print_bootstraps(bootstraps);
+
+	for (s32 i = 0; i < num_bootstraps; ++i)
+	{
+		roots[i].node = &bootstraps[i].training_set;
+		if (i == 7)
+		{
+			s32 HellOWorld = 3;
+		}
+		generate_decision_tree(&roots[i], &bootstraps[i].training_set);
+
+		for (s32 j = 0; j < bootstraps[i].training_set.num_entries; ++j)
+		{
+			Attribute result = decision_tree_get_class(bootstraps[i].training_set.attribs + j * bootstraps[i].training_set.num_attribs, &roots[i]);
+			print("%d result = %d\n", j, result.value_int);
+		}
 	}
+	//
+	//for (u32 i = 0; i < fdata.num_entries; ++i) {
+	//	Attribute result = decision_tree_get_class(&fdata.attribs[i * fdata.num_attribs], &root_node);
+	//	printf("%d result = %d\n", i, result.value_int);
+	//}
 
 	return 0;
 }
