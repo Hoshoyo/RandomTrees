@@ -13,6 +13,7 @@ typedef struct Token_T{
 } Token;
 
 enum Value_Type {
+	VALUE_TYPE_NONE = -1,
 	VALUE_TYPE_INT,
 	VALUE_TYPE_FLOAT,
 	VALUE_TYPE_CHAR,

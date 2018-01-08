@@ -2,27 +2,80 @@
 #include "parser.h"
 #include "util.h"
 #include "id3.cpp"
+#include "bootstrap.h"
 
-void generate_decision_tree(File_Data* fdata) {
+struct Decision_Tree_Node {
+	File_Data* node;
+	Attribute class_of_node;		// only if pure, otherwise -1 (VALUE_TYPE_NONE)
+	s32 attribute_index;
+	s32 original_attribute_index;
+	Decision_Tree_Node* children;	// array_release here
+};
+
+void generate_decision_tree(Decision_Tree_Node* parent, File_Data* fdata) 
+{
+	s32 attrib_index = -1;
 	Data_Values values = extract_data_from_filedata(fdata);
-	if (calculate_data_gains(fdata, &values)) {
+	if (calculate_data_gains(fdata, &values, &attrib_index)) {
+		parent->class_of_node.type = VALUE_TYPE_NONE;
+		parent->attribute_index = attrib_index;
+		parent->original_attribute_index += attrib_index;
 		File_Data* branches = data_divide_on_attribute(&values, fdata);
 		u32 num_branches = array_get_length(branches);
+		parent->children = array_create(Decision_Tree_Node, num_branches);
 		for (u32 i = 0; i < num_branches; ++i) {
-			Data_Values branches_values = extract_data_from_filedata(&branches[i]);
-			if (calculate_data_gains(&branches[i], &branches_values)) {
-				printf("\n");
-				generate_decision_tree(&branches[i]);
-			}
+			size_t index = array_emplace(parent->children);
+			parent->children[index].node = &branches[i];
+			if(i >= attrib_index)
+				parent->children[index].original_attribute_index = 1;
+			else
+				parent->children[index].original_attribute_index = 0;
+			parent->children[index].attribute_index = 0;
+			parent->children[index].children = 0;
+			generate_decision_tree(&parent->children[i], &branches[i]);
 		}
+	} else {
+		parent->class_of_node = fdata->attribs[fdata->class_index];
 	}
-	printf("\n");
+}
+
+Attribute decision_tree_get_class(Attribute* attribs, Decision_Tree_Node* tree) {
+	u32 index = attribs[tree->original_attribute_index].value_int;
+	Attribute result = {};
+
+	if (tree->children[index].class_of_node.type != VALUE_TYPE_NONE) {
+		result = tree->children[index].class_of_node;//attribs[tree->children[index].node->class_index];
+	} else {
+		result = decision_tree_get_class(attribs, &tree->children[index]);
+	}
+
+	return result;
+}
+
+void print_original_nodes(Decision_Tree_Node* node) {
+	//printf("Node: %d\n", node->original_attribute_index);
+	printf("Node: %d\n", node->class_of_node.type);
+	if (!node->children)
+		return;
+	u32 num_child = array_get_length(node->children);
+	for (int i = 0; i < num_child; ++i) {
+		print_original_nodes(&node->children[i]);
+	}
 }
 
 s32 main(s32 argc, s8** argv) 
 {
 	File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
 
-	generate_decision_tree(&fdata);
+	Decision_Tree_Node root_node = {};
+	root_node.node = &fdata;
+
+	generate_decision_tree(&root_node, &fdata);
+
+	for (u32 i = 0; i < fdata.num_entries; ++i) {
+		Attribute result = decision_tree_get_class(&fdata.attribs[i * fdata.num_attribs], &root_node);
+		printf("%d result = %d\n", i, result.value_int);
+	}
+
 	return 0;
 }

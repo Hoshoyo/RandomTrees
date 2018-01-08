@@ -36,7 +36,7 @@ File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data
 /*
 	This function returns true if entropy is different than 0 and false otherwise
 */
-bool calculate_data_gains(File_Data* file_data, Data_Values* data_values);
+bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* original_attrib_index);
 
 Data_Values extract_data_from_filedata(File_Data* file_data) {
 	u32 num_attribs = file_data->num_attribs;
@@ -157,7 +157,7 @@ internal u32 get_index(u32 x, u32 y, u32 z, u32 y_length, u32 z_length) {
 	return (x * y_length * z_length) + y * z_length + z;
 }
 
-bool calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
+bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* original_attrib_index) {
 	u32 class_number = data_values->num_classes;
 	u32 data_length = file_data->num_entries;
 
@@ -202,7 +202,6 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 	}
 
 	bool result = false;
-
 	r32 max_gain = FLT_MIN;
 	for (u32 a = 0; a < file_data->num_attribs; ++a) {
 		if(a == file_data->class_index)
@@ -224,10 +223,16 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values) {
 			data_values->biggest_gain_index = a;
 			result = true;
 		}
-		printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
+		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
-	if(result)
-		printf("Biggest gain index = %d\n", data_values->biggest_gain_index);
+	if (result) {
+		*original_attrib_index = data_values->biggest_gain_index;
+		printf("Picked %d with gain %f\n", data_values->biggest_gain_index, max_gain);
+	}
+	else {
+		*original_attrib_index = -1;
+		printf("Pure node gain 0.0f\n");
+	}
 	return result;
 }
 
