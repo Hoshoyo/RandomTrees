@@ -38,13 +38,16 @@ File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data
 */
 bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* original_attrib_index);
 
-Data_Values extract_data_from_filedata(File_Data* file_data) {
+Data_Values extract_data_from_filedata(File_Data* file_data, Data_Values* old_data_values) {
 	u32 num_attribs = file_data->num_attribs;
 	u32 num_entries = file_data->num_entries;
 
 	Attribute* max_attribs = (Attribute*)calloc(num_attribs, sizeof(Attribute));
 	Attribute* min_attribs = (Attribute*)calloc(num_attribs, sizeof(Attribute));
-	u32* attribs_value_type_count = (u32*)calloc(num_attribs, sizeof(u32));
+	u32* attribs_value_type_count = 0;// (u32*)calloc(num_attribs, sizeof(u32));
+	if (!old_data_values) {
+		attribs_value_type_count = (u32*)calloc(num_attribs, sizeof(u32));
+	}
 
 	// fill min and max arrays with initial values
 	for (s32 i = 0; i < num_attribs; ++i) {
@@ -122,11 +125,15 @@ Data_Values extract_data_from_filedata(File_Data* file_data) {
 		}
 	}
 	u32 num_attrib_type_values = 0;
-	for (u32 i = 0; i < num_attribs; ++i) {
-		size_t count = array_get_length(attribute_aux_counter[i]);
-		attribs_value_type_count[i] = count;
-		if (i != file_data->class_index)
-			num_attrib_type_values += count;
+	if (!old_data_values) {
+		for (u32 i = 0; i < num_attribs; ++i) {
+			size_t count = array_get_length(attribute_aux_counter[i]);
+			attribs_value_type_count[i] = count;
+			if (i != file_data->class_index)
+				num_attrib_type_values += count;
+		}
+	} else {
+		attribs_value_type_count = old_data_values->attribs_value_type_count;
 	}
 	u32 num_classes = attribs_value_type_count[file_data->class_index];
 
@@ -223,7 +230,7 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* o
 			data_values->biggest_gain_index = a;
 			result = true;
 		}
-		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
+		printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
 	if (result) {
 		*original_attrib_index = data_values->biggest_gain_index;
