@@ -33,6 +33,13 @@ extern Bootstrap* bootstrap(File_Data original_file_data, s32 num_bootstraps)
 		current_training_set.class_index = original_file_data.class_index;
 		current_training_set.num_attribs = original_file_data.num_attribs;
 		current_training_set.value_types = original_file_data.value_types;
+		current_training_set.types_indexes_remove_history = array_create(s32, original_file_data.num_attribs);
+		for (s32 k = 0; k < original_file_data.num_attribs; ++k) {
+			s32 minus_one = -1;
+			array_push(current_training_set.types_indexes_remove_history, &minus_one);
+		}
+		current_training_set.num_max_attributes = original_file_data.num_attribs;
+		current_training_set.tree_split_original_index = -1;
 		current_training_set.attribs = array_create(Attribute, current_training_set.num_attribs * current_training_set.num_entries);
 
 		for (s32 j = 0; j < original_file_data.num_entries; ++j)

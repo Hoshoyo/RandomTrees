@@ -325,7 +325,15 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 
 	convert_attribute_types(line_attribs, value_types, attribs_num);
 
+	result.types_indexes_remove_history = array_create(s32, attribs_num);
+	for (s32 i = 0; i < attribs_num; ++i) {
+		s32 minus_one = -1;
+		array_push(result.types_indexes_remove_history, &minus_one);
+	}
+
 	array_release(tokens);
+	result.num_max_attributes = attribs_num;
+	result.tree_split_original_index = -1;
 	result.attribs = line_attribs;
 	result.num_attribs = attribs_num;
 	result.num_entries = lines;

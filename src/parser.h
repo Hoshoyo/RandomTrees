@@ -43,7 +43,11 @@ struct File_Data {
 	s32 class_index;
 	s32 num_entries;
 	u32* value_types;			// normal calloc -> free()				array count must be num_attribs
-	u32* original_indexes;
+
+	u32 num_max_attributes;
+	s32* types_indexes_remove_history;
+	s32 tree_split_original_index;
+
 	bool integrity;
 };
 

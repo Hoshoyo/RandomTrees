@@ -1,0 +1,647 @@
+Bootstrap 0:
+	Training Set:
+		Instance 0: {2, 1, 0, 0, 0}
+		Instance 1: {0, 0, 0, 0, 0}
+		Instance 2: {1, 2, 1, 0, 1}
+		Instance 3: {1, 0, 1, 1, 1}
+		Instance 4: {2, 1, 0, 1, 1}
+		Instance 5: {1, 0, 0, 1, 1}
+		Instance 6: {1, 0, 1, 1, 1}
+		Instance 7: {0, 0, 0, 1, 0}
+		Instance 8: {1, 0, 1, 1, 1}
+		Instance 9: {1, 2, 1, 0, 1}
+		Instance 10: {0, 1, 0, 1, 0}
+		Instance 11: {2, 2, 1, 0, 0}
+		Instance 12: {2, 1, 0, 0, 0}
+		Instance 13: {2, 1, 0, 0, 0}
+Test Set:
+		Instance 0: {2, 2, 1, 1, 1}
+		Instance 1: {0, 2, 1, 1, 1}
+		Instance 2: {2, 1, 1, 1, 1}
+		Instance 3: {0, 1, 1, 0, 1}
+		Instance 4: {1, 1, 0, 0, 1}
+Bootstrap 1:
+	Training Set:
+		Instance 0: {0, 1, 0, 1, 0}
+		Instance 1: {0, 0, 0, 0, 0}
+		Instance 2: {2, 1, 0, 0, 0}
+		Instance 3: {0, 0, 0, 1, 0}
+		Instance 4: {1, 1, 0, 0, 1}
+		Instance 5: {2, 2, 1, 1, 1}
+		Instance 6: {2, 1, 1, 1, 1}
+		Instance 7: {1, 0, 0, 1, 1}
+		Instance 8: {0, 1, 1, 0, 1}
+		Instance 9: {2, 1, 0, 0, 0}
+		Instance 10: {1, 0, 1, 1, 1}
+		Instance 11: {1, 2, 1, 0, 1}
+		Instance 12: {2, 2, 1, 0, 0}
+		Instance 13: {1, 0, 1, 1, 1}
+Test Set:
+		Instance 0: {2, 1, 0, 1, 1}
+		Instance 1: {0, 2, 1, 1, 1}
+Bootstrap 2:
+	Training Set:
+		Instance 0: {1, 2, 1, 0, 1}
+		Instance 1: {0, 0, 0, 0, 0}
+		Instance 2: {0, 0, 0, 0, 0}
+		Instance 3: {1, 0, 1, 1, 1}
+		Instance 4: {0, 0, 0, 0, 0}
+		Instance 5: {1, 0, 0, 1, 1}
+		Instance 6: {0, 1, 0, 1, 0}
+		Instance 7: {2, 2, 1, 1, 1}
+		Instance 8: {2, 2, 1, 0, 0}
+		Instance 9: {0, 1, 0, 1, 0}
+		Instance 10: {1, 1, 0, 0, 1}
+		Instance 11: {0, 1, 1, 0, 1}
+		Instance 12: {2, 1, 0, 1, 1}
+		Instance 13: {1, 1, 0, 0, 1}
+Test Set:
+		Instance 0: {0, 0, 0, 1, 0}
+		Instance 1: {0, 2, 1, 1, 1}
+		Instance 2: {2, 1, 1, 1, 1}
+		Instance 3: {2, 1, 0, 0, 0}
+Bootstrap 3:
+	Training Set:
+		Instance 0: {2, 2, 1, 1, 1}
+		Instance 1: {2, 1, 1, 1, 1}
+		Instance 2: {2, 2, 1, 0, 0}
+		Instance 3: {1, 0, 0, 1, 1}
+		Instance 4: {0, 1, 0, 1, 0}
+		Instance 5: {1, 1, 0, 0, 1}
+		Instance 6: {0, 0, 0, 0, 0}
+		Instance 7: {0, 2, 1, 1, 1}
+		Instance 8: {1, 1, 0, 0, 1}
+		Instance 9: {0, 2, 1, 1, 1}
+		Instance 10: {0, 0, 0, 1, 0}
+		Instance 11: {1, 1, 0, 0, 1}
+		Instance 12: {2, 1, 0, 1, 1}
+		Instance 13: {0, 1, 0, 1, 0}
+Test Set:
+		Instance 0: {1, 2, 1, 0, 1}
+		Instance 1: {0, 1, 1, 0, 1}
+		Instance 2: {1, 0, 1, 1, 1}
+		Instance 3: {2, 1, 0, 0, 0}
+Bootstrap 4:
+	Training Set:
+		Instance 0: {0, 0, 0, 0, 0}
+		Instance 1: {1, 1, 0, 0, 1}
+		Instance 2: {2, 2, 1, 0, 0}
+		Instance 3: {0, 2, 1, 1, 1}
+		Instance 4: {0, 1, 1, 0, 1}
+		Instance 5: {1, 1, 0, 0, 1}
+		Instance 6: {0, 0, 0, 1, 0}
+		Instance 7: {0, 2, 1, 1, 1}
+		Instance 8: {0, 2, 1, 1, 1}
+		Instance 9: {1, 2, 1, 0, 1}
+		Instance 10: {0, 1, 1, 0, 1}
+		Instance 11: {0, 1, 1, 0, 1}
+		Instance 12: {0, 0, 0, 1, 0}
+		Instance 13: {0, 1, 1, 0, 1}
+Test Set:
+		Instance 0: {1, 0, 0, 1, 1}
+		Instance 1: {2, 1, 0, 1, 1}
+		Instance 2: {2, 2, 1, 1, 1}
+		Instance 3: {0, 1, 0, 1, 0}
+		Instance 4: {2, 1, 1, 1, 1}
+		Instance 5: {1, 0, 1, 1, 1}
+		Instance 6: {2, 1, 0, 0, 0}
+Bootstrap 5:
+	Training Set:
+		Instance 0: {1, 2, 1, 0, 1}
+		Instance 1: {2, 2, 1, 0, 0}
+		Instance 2: {0, 0, 0, 1, 0}
+		Instance 3: {2, 1, 1, 1, 1}
+		Instance 4: {0, 1, 1, 0, 1}
+		Instance 5: {1, 2, 1, 0, 1}
+		Instance 6: {1, 0, 1, 1, 1}
+		Instance 7: {0, 1, 0, 1, 0}
+		Instance 8: {2, 2, 1, 0, 0}
+		Instance 9: {1, 2, 1, 0, 1}
+		Instance 10: {0, 0, 0, 0, 0}
+		Instance 11: {2, 1, 1, 1, 1}
+		Instance 12: {2, 2, 1, 1, 1}
+		Instance 13: {2, 2, 1, 1, 1}
+Test Set:
+		Instance 0: {1, 0, 0, 1, 1}
+		Instance 1: {2, 1, 0, 1, 1}
+		Instance 2: {0, 2, 1, 1, 1}
+		Instance 3: {1, 1, 0, 0, 1}
+		Instance 4: {2, 1, 0, 0, 0}
+Bootstrap 6:
+	Training Set:
+		Instance 0: {0, 1, 1, 0, 1}
+		Instance 1: {0, 1, 1, 0, 1}
+		Instance 2: {0, 1, 1, 0, 1}
+		Instance 3: {1, 0, 1, 1, 1}
+		Instance 4: {0, 0, 0, 0, 0}
+		Instance 5: {1, 0, 0, 1, 1}
+		Instance 6: {2, 2, 1, 1, 1}
+		Instance 7: {0, 0, 0, 0, 0}
+		Instance 8: {0, 0, 0, 1, 0}
+		Instance 9: {1, 1, 0, 0, 1}
+		Instance 10: {0, 1, 0, 1, 0}
+		Instance 11: {1, 2, 1, 0, 1}
+		Instance 12: {2, 2, 1, 1, 1}
+		Instance 13: {0, 1, 1, 0, 1}
+Test Set:
+		Instance 0: {2, 1, 0, 1, 1}
+		Instance 1: {2, 2, 1, 0, 0}
+		Instance 2: {0, 2, 1, 1, 1}
+		Instance 3: {2, 1, 1, 1, 1}
+		Instance 4: {2, 1, 0, 0, 0}
+Bootstrap 7:
+	Training Set:
+		Instance 0: {1, 1, 0, 0, 1}
+		Instance 1: {0, 1, 0, 1, 0}
+		Instance 2: {2, 1, 0, 1, 1}
+		Instance 3: {0, 1, 0, 1, 0}
+		Instance 4: {2, 2, 1, 0, 0}
+		Instance 5: {1, 2, 1, 0, 1}
+		Instance 6: {0, 1, 1, 0, 1}
+		Instance 7: {2, 2, 1, 1, 1}
+		Instance 8: {2, 2, 1, 0, 0}
+		Instance 9: {0, 1, 1, 0, 1}
+		Instance 10: {2, 2, 1, 0, 0}
+		Instance 11: {0, 0, 0, 1, 0}
+		Instance 12: {2, 1, 1, 1, 1}
+		Instance 13: {2, 1, 0, 1, 1}
+Test Set:
+		Instance 0: {0, 0, 0, 0, 0}
+		Instance 1: {1, 0, 0, 1, 1}
+		Instance 2: {0, 2, 1, 1, 1}
+		Instance 3: {1, 0, 1, 1, 1}
+		Instance 4: {2, 1, 0, 0, 0}
+Bootstrap 8:
+	Training Set:
+		Instance 0: {1, 0, 0, 1, 1}
+		Instance 1: {2, 2, 1, 1, 1}
+		Instance 2: {1, 0, 1, 1, 1}
+		Instance 3: {2, 2, 1, 0, 0}
+		Instance 4: {2, 1, 1, 1, 1}
+		Instance 5: {2, 2, 1, 0, 0}
+		Instance 6: {0, 0, 0, 0, 0}
+		Instance 7: {1, 2, 1, 0, 1}
+		Instance 8: {2, 2, 1, 1, 1}
+		Instance 9: {2, 2, 1, 1, 1}
+		Instance 10: {2, 2, 1, 0, 0}
+		Instance 11: {1, 0, 0, 1, 1}
+		Instance 12: {1, 1, 0, 0, 1}
+		Instance 13: {0, 0, 0, 0, 0}
+Test Set:
+		Instance 0: {0, 0, 0, 1, 0}
+		Instance 1: {2, 1, 0, 1, 1}
+		Instance 2: {0, 1, 0, 1, 0}
+		Instance 3: {0, 2, 1, 1, 1}
+		Instance 4: {0, 1, 1, 0, 1}
+		Instance 5: {2, 1, 0, 0, 0}
+Bootstrap 9:
+	Training Set:
+		Instance 0: {2, 1, 1, 1, 1}
+		Instance 1: {1, 2, 1, 0, 1}
+		Instance 2: {2, 1, 0, 0, 0}
+		Instance 3: {1, 0, 1, 1, 1}
+		Instance 4: {0, 2, 1, 1, 1}
+		Instance 5: {1, 0, 0, 1, 1}
+		Instance 6: {0, 0, 0, 0, 0}
+		Instance 7: {0, 1, 1, 0, 1}
+		Instance 8: {0, 2, 1, 1, 1}
+		Instance 9: {0, 0, 0, 1, 0}
+		Instance 10: {2, 1, 0, 0, 0}
+		Instance 11: {0, 1, 0, 1, 0}
+		Instance 12: {2, 1, 0, 1, 1}
+		Instance 13: {1, 1, 0, 0, 1}
+Test Set:
+		Instance 0: {2, 2, 1, 1, 1}
+		Instance 1: {2, 2, 1, 0, 0}
+infod info_d_subattrib 0: 0.742169
+infod info_d_subattrib 1: 0.151835
+infod info_d_subattrib 2: 0.257831
+infod info_d_subattrib 3: 0.136879
+Picked 0 with gain 0.742169
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.072906
+infod info_d_subattrib 1: 0.072906
+infod info_d_subattrib 2: 0.721928
+Picked 2 with gain 0.721928
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+0 result = 0
+1 result = 0
+2 result = 1
+3 result = 1
+4 result = 1
+5 result = 1
+6 result = 1
+7 result = 0
+8 result = 1
+9 result = 1
+10 result = 0
+11 result = 0
+12 result = 0
+13 result = 0
+infod info_d_subattrib 0: 0.406666
+infod info_d_subattrib 1: 0.013111
+infod info_d_subattrib 2: 0.257831
+infod info_d_subattrib 3: 0.061054
+Picked 0 with gain 0.406666
+infod info_d_subattrib 0: 0.311278
+infod info_d_subattrib 1: 0.811278
+infod info_d_subattrib 2: 0.311278
+Picked 1 with gain 0.811278
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.019973
+infod info_d_subattrib 1: 0.419973
+infod info_d_subattrib 2: 0.970951
+Picked 2 with gain 0.970951
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+0 result = 0
+1 result = 0
+2 result = 0
+3 result = 0
+4 result = 1
+5 result = 1
+6 result = 1
+7 result = 1
+8 result = 1
+9 result = 0
+10 result = 1
+11 result = 1
+12 result = 0
+13 result = 1
+infod info_d_subattrib 0: 0.509869
+infod info_d_subattrib 1: 0.048127
+infod info_d_subattrib 2: 0.090276
+infod info_d_subattrib 3: 0.020244
+Picked 0 with gain 0.509869
+infod info_d_subattrib 0: 0.190875
+infod info_d_subattrib 1: 0.650022
+infod info_d_subattrib 2: 0.109170
+Picked 1 with gain 0.650022
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.251629
+infod info_d_subattrib 1: 0.251629
+infod info_d_subattrib 2: 0.918296
+Picked 2 with gain 0.918296
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 0
+2 result = 0
+3 result = 1
+4 result = 0
+5 result = 1
+6 result = 0
+7 result = 1
+8 result = 0
+9 result = 0
+10 result = 1
+11 result = 1
+12 result = 1
+13 result = 1
+infod info_d_subattrib 0: 0.314937
+infod info_d_subattrib 1: 0.080154
+infod info_d_subattrib 2: 0.045334
+infod info_d_subattrib 3: 0.003185
+Picked 0 with gain 0.314937
+infod info_d_subattrib 0: 0.918296
+infod info_d_subattrib 1: 0.918296
+infod info_d_subattrib 2: 0.109170
+Picked 0 with gain 0.918296
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.311278
+infod info_d_subattrib 1: 0.122556
+infod info_d_subattrib 2: 0.811278
+Picked 2 with gain 0.811278
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 1
+2 result = 0
+3 result = 1
+4 result = 0
+5 result = 1
+6 result = 0
+7 result = 1
+8 result = 1
+9 result = 1
+10 result = 0
+11 result = 1
+12 result = 1
+13 result = 0
+infod info_d_subattrib 0: 0.233627
+infod info_d_subattrib 1: 0.605289
+infod info_d_subattrib 2: 0.192829
+infod info_d_subattrib 3: 0.025078
+Picked 1 with gain 0.605289
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.721928
+infod info_d_subattrib 1: 0.000000
+infod info_d_subattrib 2: 0.321928
+Picked 0 with gain 0.721928
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+0 result = 0
+1 result = 1
+2 result = 0
+3 result = 1
+4 result = 1
+5 result = 1
+6 result = 0
+7 result = 1
+8 result = 1
+9 result = 1
+10 result = 1
+11 result = 1
+12 result = 0
+13 result = 1
+infod info_d_subattrib 0: 0.314937
+infod info_d_subattrib 1: 0.080154
+infod info_d_subattrib 2: 0.402827
+infod info_d_subattrib 3: 0.016112
+Picked 2 with gain 0.402827
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.183150
+infod info_d_subattrib 1: 0.134780
+infod info_d_subattrib 2: 0.183150
+Picked 0 with gain 0.183150
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.251629
+infod info_d_subattrib 1: 0.918296
+Picked 1 with gain 0.918296
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 0
+2 result = 0
+3 result = 1
+4 result = 1
+5 result = 1
+6 result = 1
+7 result = 0
+8 result = 0
+9 result = 1
+10 result = 0
+11 result = 1
+12 result = 1
+13 result = 1
+infod info_d_subattrib 0: 0.291692
+infod info_d_subattrib 1: 0.237771
+infod info_d_subattrib 2: 0.469565
+infod info_d_subattrib 3: 0.005978
+Picked 2 with gain 0.469565
+infod info_d_subattrib 0: 0.918296
+infod info_d_subattrib 1: 0.044110
+infod info_d_subattrib 2: 0.000000
+Picked 0 with gain 0.918296
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 1
+2 result = 1
+3 result = 1
+4 result = 0
+5 result = 1
+6 result = 1
+7 result = 0
+8 result = 0
+9 result = 1
+10 result = 0
+11 result = 1
+12 result = 1
+13 result = 1
+infod info_d_subattrib 0: 0.145846
+infod info_d_subattrib 1: 0.174872
+infod info_d_subattrib 2: 0.011266
+infod info_d_subattrib 3: 0.000000
+Picked 1 with gain 0.174872
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.311278
+infod info_d_subattrib 1: 0.204434
+infod info_d_subattrib 2: 0.204434
+Picked 0 with gain 0.311278
+infod info_d_subattrib 0: 1.000000
+infod info_d_subattrib 1: 1.000000
+Picked 0 with gain 1.000000
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.321928
+infod info_d_subattrib 1: 0.000000
+infod info_d_subattrib 2: 0.321928
+Picked 0 with gain 0.321928
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.000000
+infod info_d_subattrib 1: 0.811278
+Picked 1 with gain 0.811278
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 0
+2 result = 1
+3 result = 0
+4 result = 0
+5 result = 1
+6 result = 1
+7 result = 1
+8 result = 0
+9 result = 1
+10 result = 0
+11 result = 0
+12 result = 1
+13 result = 1
+infod info_d_subattrib 0: 0.447672
+infod info_d_subattrib 1: 0.100904
+infod info_d_subattrib 2: 0.003185
+infod info_d_subattrib 3: 0.508726
+Picked 3 with gain 0.508726
+infod info_d_subattrib 0: 0.863121
+infod info_d_subattrib 1: 0.399533
+infod info_d_subattrib 2: 0.005978
+Picked 0 with gain 0.863121
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 1
+2 result = 1
+3 result = 0
+4 result = 1
+5 result = 0
+6 result = 0
+7 result = 1
+8 result = 1
+9 result = 1
+10 result = 0
+11 result = 1
+12 result = 1
+13 result = 0
+infod info_d_subattrib 0: 0.226000
+infod info_d_subattrib 1: 0.161958
+infod info_d_subattrib 2: 0.394895
+infod info_d_subattrib 3: 0.048127
+Picked 2 with gain 0.394895
+infod info_d_subattrib 0: 0.610073
+infod info_d_subattrib 1: 0.003229
+infod info_d_subattrib 2: 0.048795
+Picked 0 with gain 0.610073
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: 0.000000
+infod info_d_subattrib 1: 0.918296
+Picked 1 with gain 0.918296
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+Pure node gain 0.0f
+infod info_d_subattrib 0: nan
+infod info_d_subattrib 1: nan
+infod info_d_subattrib 2: nan
+Pure node gain 0.0f
+0 result = 1
+1 result = 1
+2 result = 0
+3 result = 1
+4 result = 1
+5 result = 1
+6 result = 0
+7 result = 1
+8 result = 1
+9 result = 0
+10 result = 0
+11 result = 0
+12 result = 1
+13 result = 1

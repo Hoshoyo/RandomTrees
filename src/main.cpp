@@ -7,13 +7,12 @@
 struct Decision_Tree_Node {
 	File_Data* node;
 	Attribute class_of_node;		// only if pure, otherwise -1 (VALUE_TYPE_NONE)
-	s32 attribute_index;
-	s32 original_attribute_index;
 	Decision_Tree_Node* children;	// array_release here
 	Data_Values data_values;
 };
 
-void generate_decision_tree(Decision_Tree_Node* parent, File_Data* fdata, Data_Values* data_values = 0) 
+// pure node true otherwise false
+bool generate_decision_tree(Decision_Tree_Node* parent, File_Data* fdata, Data_Values* data_values = 0) 
 {
 	s32 attrib_index = -1;
 	Data_Values values = extract_data_from_filedata(fdata, data_values);
@@ -22,8 +21,6 @@ void generate_decision_tree(Decision_Tree_Node* parent, File_Data* fdata, Data_V
 	{
 		parent->data_values = values;
 		parent->class_of_node.type = VALUE_TYPE_NONE;
-		parent->attribute_index = attrib_index;
-		parent->original_attribute_index += attrib_index;
 		File_Data* branches = data_divide_on_attribute(&values, fdata);
 		u32 num_branches = array_get_length(branches);
 		parent->children = array_create(Decision_Tree_Node, num_branches);
@@ -32,28 +29,28 @@ void generate_decision_tree(Decision_Tree_Node* parent, File_Data* fdata, Data_V
 		{
 			size_t index = array_emplace(parent->children);
 			parent->children[index].node = &branches[i];
-			if(i >= attrib_index)
-				parent->children[index].original_attribute_index = 1;
-			else
-				parent->children[index].original_attribute_index = 0;
-			parent->children[index].attribute_index = 0;
 			parent->children[index].children = 0;
+			s32* backup = (s32*)malloc(parent->node->num_max_attributes * sizeof(s32));
+			memcpy(backup, parent->node->types_indexes_remove_history, parent->node->num_max_attributes * sizeof(s32));
 			generate_decision_tree(&parent->children[i], &branches[i], &values);
+			memcpy(parent->node->types_indexes_remove_history, backup, parent->node->num_max_attributes * sizeof(s32));
+			free(backup);
 		}
 
 	} else {
 		parent->class_of_node = fdata->attribs[fdata->class_index];
+		return true;
 	}
+	return false;
 }
 
 Attribute decision_tree_get_class(Attribute* attribs, Decision_Tree_Node* tree) {
-	u32 index = attribs[tree->original_attribute_index].value_int;
+	u32 index = attribs[tree->node->tree_split_original_index].value_int;
 	Attribute result = {};
 
 	if (tree->children[index].class_of_node.type != VALUE_TYPE_NONE) {
-		result = tree->children[index].class_of_node;//attribs[tree->children[index].node->class_index];
+		result = tree->children[index].class_of_node;
 	} else {
-		Data_Values values = tree->data_values;
 		result = decision_tree_get_class(attribs, &tree->children[index]);
 	}
 
@@ -85,7 +82,7 @@ s32 main(s32 argc, s8** argv)
 	for (s32 i = 0; i < num_bootstraps; ++i)
 	{
 		roots[i].node = &bootstraps[i].training_set;
-		if (i == 4) {
+		if (i == 7) {
 			int x = 0;
 		}
 		generate_decision_tree(&roots[i], &bootstraps[i].training_set);

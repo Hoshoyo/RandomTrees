@@ -44,7 +44,8 @@ Data_Values extract_data_from_filedata(File_Data* file_data, Data_Values* old_da
 
 	Attribute* max_attribs = (Attribute*)calloc(num_attribs, sizeof(Attribute));
 	Attribute* min_attribs = (Attribute*)calloc(num_attribs, sizeof(Attribute));
-	u32* attribs_value_type_count = 0;// (u32*)calloc(num_attribs, sizeof(u32));
+	
+	u32* attribs_value_type_count = 0;
 	if (!old_data_values) {
 		attribs_value_type_count = (u32*)calloc(num_attribs, sizeof(u32));
 	}
@@ -243,6 +244,45 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* o
 	return result;
 }
 
+s32 find_original_index(u32 max_attribs, s32* history, s32 tofind) {
+	s32 aux[1024];
+	bool first = true;
+	for (s32 i = 0; i < max_attribs; ++i) {
+		aux[i] = i;
+	}
+
+	for (s32 i = 0; i < max_attribs; ++i) {
+		if (history[i] != -1) {
+			aux[history[i]] = -1;
+			first = false;
+		}
+	}
+
+	if (first)
+		return tofind;
+
+	s32 index = 0;
+	for (s32 i = 0; i < max_attribs;) {
+		if (i >= tofind && aux[index] != -1) return index;
+		if (aux[index] != -1) ++i;
+		index++;
+	}
+
+	//free(aux);
+
+	return index;
+}
+
+static void add_to_index_type_values_history(s32* history, s32 index, s32 array_max) {
+	assert(index < array_max);
+	for (int i = 0; i < array_max; ++i) {
+		if (history[i] == -1) {
+			history[i] = index;
+			return;
+		}
+	}
+}
+
 File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data) {
 	File_Data* result = 0;
 
@@ -252,10 +292,17 @@ File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data
 	u32 num_value_types_of_biggest_gain = data_values->attribs_value_type_count[biggest_gain_index];
 	// divide root being biggest_gain_index and num_value_types_of_biggest_gain branches
 	
+	s32 original_type_value_index = find_original_index(in_data->num_max_attributes, in_data->types_indexes_remove_history, (s32)biggest_gain_index);
+	add_to_index_type_values_history(in_data->types_indexes_remove_history, (s32)original_type_value_index, in_data->num_max_attributes);
+	in_data->tree_split_original_index = original_type_value_index;
+
 	result = array_create(File_Data, num_value_types_of_biggest_gain);
 	array_allocate(result, num_value_types_of_biggest_gain);
 
 	for (u32 i = 0; i < num_value_types_of_biggest_gain; ++i) {
+		result[i].tree_split_original_index = -1;
+		result[i].types_indexes_remove_history = in_data->types_indexes_remove_history;
+		result[i].num_max_attributes = in_data->num_max_attributes;
 		result[i].attribs = array_create(Attribute, 16);
 		result[i].num_attribs = num_attribs - 1;
 		result[i].num_entries = 0;
