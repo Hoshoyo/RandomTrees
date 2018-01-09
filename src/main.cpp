@@ -70,7 +70,15 @@ void print_original_nodes(Decision_Tree_Node* node) {
 
 s32 main(s32 argc, s8** argv)
 {
-	File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
+	//File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
+	File_Data fdata = parse_file((char*)"res/haberman.data", 4, 3);
+
+	for (int n = 0; n < fdata.num_entries; ++n) {
+		for (int i = 0; i < fdata.num_attribs; ++i) {
+			printf("%d ", fdata.attribs[n * fdata.num_attribs + i].value_int);
+		}
+		printf("\n");
+	}
 
 	const s32 num_bootstraps = 10;
 
@@ -89,7 +97,12 @@ s32 main(s32 argc, s8** argv)
 		for (s32 j = 0; j < bootstraps[i].training_set.num_entries; ++j)
 		{
 			Attribute result = decision_tree_get_class(bootstraps[i].training_set.attribs + j * bootstraps[i].training_set.num_attribs, &roots[i]);
-			print("%d result = %d\n", j, result.value_int);
+			if (roots[i].class_of_node.value_int == 
+				bootstraps->training_set.attribs[j * bootstraps[i].training_set.num_max_attributes + bootstraps[i].training_set.class_index].value_int) 
+			{
+				printf("success\n");
+			}
+			//print("%d result = %d\n", j, result.value_int);
 		}
 	}
 	//

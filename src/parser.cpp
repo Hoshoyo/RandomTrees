@@ -268,6 +268,27 @@ internal void convert_attribute_types(Attribute* line_attribs, u32* value_types,
 		- The field attribs is allocated using array_create and must be freed after use with array_release
 	
 */
+static s32 get_integer_attribute_indexed_value(s32 attrib, s32** integer_index_values_array, s32 length, s32 index, File_Data* fdata) {
+	if (integer_index_values_array[index] == 0)
+		integer_index_values_array[index] = array_create(s32, 8);
+	size_t size = array_get_length(integer_index_values_array[index]);
+
+	if (size > 0) {
+		for (size_t i = 0; i < size; ++i) {
+			if (integer_index_values_array[index][i] == attrib)
+				return i;
+		}
+		fdata->count_value_types_each_attribute[index] += 1;
+		array_push(integer_index_values_array[index], &attrib);
+		return (s32)size;
+	} else {
+		fdata->count_value_types_each_attribute[index] += 1;
+		array_push(integer_index_values_array[index], &attrib);
+		return 0;
+	}
+	return -1;
+}
+
 extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 	File_Data result = {};
 	Token* tokens = tokenize(filename);
@@ -276,7 +297,11 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 
 	Attribute* line_attribs = (Attribute*)_array_create(16, sizeof(Attribute) * attribs_num);
 
+	result.count_value_types_each_attribute = (u32*)calloc(attribs_num, sizeof(u32*));
+
 	u32* value_types = (u32*)calloc(attribs_num, sizeof(u32));
+
+	s32** integer_index_value = (s32**)calloc(attribs_num, sizeof(s32**));
 
 	Token* t = &tokens[0];
 	bool end = false;
@@ -292,7 +317,7 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 			}break;
 			case TOKEN_NUMBER_INT: {
 				s32 value = str_to_s32(t->data, t->length);
-				line_attribs[index + i].value_int = value;
+				line_attribs[index + i].value_int = get_integer_attribute_indexed_value(value, integer_index_value, attribs_num, i, &result);
 				line_attribs[index + i].type = VALUE_TYPE_INT;
 				update_value_types(value_types, i, VALUE_TYPE_INT);
 			}break;
@@ -314,6 +339,8 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 				return {};
 			}break;
 			}
+			
+
 			t = &tokens[++token_count];
 
 			if (i + 1 < attribs_num || peek_token(tokens, token_count)->type == TOKEN_COMMA) {
@@ -322,6 +349,11 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 		}
 		lines += 1;
 	}
+	for (s32 i = 0; i < attribs_num; ++i) {
+		if (integer_index_value[i] != 0)
+			array_release(integer_index_value[i]);
+	}
+	free(integer_index_value);
 
 	convert_attribute_types(line_attribs, value_types, attribs_num);
 

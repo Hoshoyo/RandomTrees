@@ -28,6 +28,7 @@ extern Bootstrap* bootstrap(File_Data original_file_data, s32 num_bootstraps)
 		Bootstrap current_bootstrap = { 0 };
 		File_Data current_training_set;
 
+		current_training_set.count_value_types_each_attribute = original_file_data.count_value_types_each_attribute;
 		current_training_set.num_entries = original_file_data.num_entries;
 		current_training_set.integrity = original_file_data.integrity;
 		current_training_set.class_index = original_file_data.class_index;

@@ -231,15 +231,15 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* o
 			data_values->biggest_gain_index = a;
 			result = true;
 		}
-		printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
+		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
 	if (result) {
 		*original_attrib_index = data_values->biggest_gain_index;
-		printf("Picked %d with gain %f\n", data_values->biggest_gain_index, max_gain);
+		//printf("Picked %d with gain %f\n", data_values->biggest_gain_index, max_gain);
 	}
 	else {
 		*original_attrib_index = -1;
-		printf("Pure node gain 0.0f\n");
+		//printf("Pure node gain 0.0f\n");
 	}
 	return result;
 }
@@ -289,17 +289,19 @@ File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data
 	u32 num_entries = in_data->num_entries;
 	u32 num_attribs = in_data->num_attribs;
 	u32 biggest_gain_index = data_values->biggest_gain_index;
-	u32 num_value_types_of_biggest_gain = data_values->attribs_value_type_count[biggest_gain_index];
-	// divide root being biggest_gain_index and num_value_types_of_biggest_gain branches
 	
 	s32 original_type_value_index = find_original_index(in_data->num_max_attributes, in_data->types_indexes_remove_history, (s32)biggest_gain_index);
 	add_to_index_type_values_history(in_data->types_indexes_remove_history, (s32)original_type_value_index, in_data->num_max_attributes);
 	in_data->tree_split_original_index = original_type_value_index;
 
+	u32 num_value_types_of_biggest_gain = in_data->count_value_types_each_attribute[original_type_value_index];//data_values->attribs_value_type_count[biggest_gain_index];
+	// divide root being biggest_gain_index and num_value_types_of_biggest_gain branches
+
 	result = array_create(File_Data, num_value_types_of_biggest_gain);
 	array_allocate(result, num_value_types_of_biggest_gain);
 
 	for (u32 i = 0; i < num_value_types_of_biggest_gain; ++i) {
+		result[i].count_value_types_each_attribute = in_data->count_value_types_each_attribute;
 		result[i].tree_split_original_index = -1;
 		result[i].types_indexes_remove_history = in_data->types_indexes_remove_history;
 		result[i].num_max_attributes = in_data->num_max_attributes;
