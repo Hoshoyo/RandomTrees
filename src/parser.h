@@ -49,6 +49,8 @@ struct File_Data {
 	s32* types_indexes_remove_history;
 	s32 tree_split_original_index;
 
+	s32** integer_index_value;
+
 	bool integrity;
 };
 

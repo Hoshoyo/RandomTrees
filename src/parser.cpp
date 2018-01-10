@@ -301,7 +301,7 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 
 	u32* value_types = (u32*)calloc(attribs_num, sizeof(u32));
 
-	s32** integer_index_value = (s32**)calloc(attribs_num, sizeof(s32**));
+	result.integer_index_value = (s32**)calloc(attribs_num, sizeof(s32**));
 
 	Token* t = &tokens[0];
 	bool end = false;
@@ -317,7 +317,8 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 			}break;
 			case TOKEN_NUMBER_INT: {
 				s32 value = str_to_s32(t->data, t->length);
-				line_attribs[index + i].value_int = get_integer_attribute_indexed_value(value, integer_index_value, attribs_num, i, &result);
+				line_attribs[index + i].value_int = get_integer_attribute_indexed_value(value, result.integer_index_value, attribs_num, i, &result);
+				//line_attribs[index + i].value_int = value;
 				line_attribs[index + i].type = VALUE_TYPE_INT;
 				update_value_types(value_types, i, VALUE_TYPE_INT);
 			}break;
@@ -349,11 +350,11 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 		}
 		lines += 1;
 	}
-	for (s32 i = 0; i < attribs_num; ++i) {
-		if (integer_index_value[i] != 0)
-			array_release(integer_index_value[i]);
-	}
-	free(integer_index_value);
+	//for (s32 i = 0; i < attribs_num; ++i) {
+	//	if (integer_index_value[i] != 0)
+	//		array_release(integer_index_value[i]);
+	//}
+	//free(integer_index_value);
 
 	convert_attribute_types(line_attribs, value_types, attribs_num);
 

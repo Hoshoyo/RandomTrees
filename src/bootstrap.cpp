@@ -62,6 +62,7 @@ extern Bootstrap* bootstrap(File_Data original_file_data, s32 num_bootstraps)
 		File_Data current_test_set = { 0 };
 
 		//current_test_set.num_entries = original_file_data.num_entries;
+		current_test_set.num_max_attributes = original_file_data.num_max_attributes;
 		current_test_set.integrity = original_file_data.integrity;
 		current_test_set.class_index = original_file_data.class_index;
 		current_test_set.num_attribs = original_file_data.num_attribs;

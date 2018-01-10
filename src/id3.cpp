@@ -295,6 +295,7 @@ File_Data* data_divide_on_attribute(Data_Values* data_values, File_Data* in_data
 	in_data->tree_split_original_index = original_type_value_index;
 
 	u32 num_value_types_of_biggest_gain = in_data->count_value_types_each_attribute[original_type_value_index];//data_values->attribs_value_type_count[biggest_gain_index];
+	//u32 num_value_types_of_biggest_gain = data_values->attribs_value_type_count[biggest_gain_index];
 	// divide root being biggest_gain_index and num_value_types_of_biggest_gain branches
 
 	result = array_create(File_Data, num_value_types_of_biggest_gain);
