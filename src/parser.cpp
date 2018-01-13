@@ -88,7 +88,7 @@ internal Token* tokenize(char* filename)
 	FILE_HANDLE handle = file_open(filename, READ_ONLY);
 	if (handle == INVALID_FILE) {
 		print("Could not open file %s\n", filename);
-		assert(0);
+		return 0;
 	}
 	size_t file_size = file_get_size(filename);
 	u8* data = (u8*)file_read_entire(handle, file_size, 0);
@@ -156,7 +156,7 @@ internal Token* peek_token(Token* tokens, s32 count) {
 
 #define EAT_COMMA if (t->type != TOKEN_COMMA) {	\
 print("Error parsing line %d expected comma but got %.*s\n", line, t->length, t->data);	\
-assert(0); break;	\
+result.integrity = false; return result;	\
 }	\
 t = &tokens[++token_count]
 
@@ -292,6 +292,10 @@ static s32 get_integer_attribute_indexed_value(s32 attrib, s32** integer_index_v
 extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 	File_Data result = {};
 	Token* tokens = tokenize(filename);
+	if (tokens == 0) {
+		result.integrity = false;
+		return result;
+	}
 	s32 token_count = 0;
 	s32 lines = 0;
 
@@ -324,20 +328,26 @@ extern File_Data parse_file(s8* filename, s32 attribs_num, s32 class_index) {
 			}break;
 			case TOKEN_NUMBER_FLOAT: {
 				r32 value = str_to_r32(t->data, t->length);
-				line_attribs[index + i].value_float = value;
-				line_attribs[index + i].type = VALUE_TYPE_FLOAT;
-				update_value_types(value_types, i, VALUE_TYPE_FLOAT);
+				//line_attribs[index + i].value_float = value;
+				//line_attribs[index + i].type = VALUE_TYPE_FLOAT;
+				//update_value_types(value_types, i, VALUE_TYPE_FLOAT);
+				line_attribs[index + i].value_int = get_integer_attribute_indexed_value((s32)value, result.integer_index_value, attribs_num, i, &result);
+				line_attribs[index + i].type = VALUE_TYPE_INT;
+				update_value_types(value_types, i, VALUE_TYPE_INT);
 			}break;
 			case TOKEN_CHARACTER: {
 				s8 value = uppercase(t->data[0]);
-				line_attribs[index + i].value_char = value;
-				line_attribs[index + i].type = VALUE_TYPE_CHAR;
-				update_value_types(value_types, i, VALUE_TYPE_CHAR);
+				//line_attribs[index + i].value_char = value;
+				//line_attribs[index + i].type = VALUE_TYPE_CHAR;
+				//update_value_types(value_types, i, VALUE_TYPE_CHAR);
+				line_attribs[index + i].value_int = get_integer_attribute_indexed_value((s32)value, result.integer_index_value, attribs_num, i, &result);
+				line_attribs[index + i].type = VALUE_TYPE_INT;
+				update_value_types(value_types, i, VALUE_TYPE_INT);
 			}break;
 			default: {
 				print("Error parsing attribute %d in line %d expected int but got %.*s\n", attribs_num + 1, line, t->length, t->data);
-				assert(0);
-				return {};
+				result.integrity = false;
+				return result;
 			}break;
 			}
 			

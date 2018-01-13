@@ -79,15 +79,60 @@ Attribute decision_tree_get_class(Attribute* attribs, Decision_Tree_Node* tree)
 	return result;
 }
 
+void print_usage(char* filename) {
+	printf("usage: %s <filepath> <num_attribs> <class_index> <num_bootstraps>\n\n", filename);
+	printf("\tnum_attribs    = Number of attributes in the data set, class included.\n");
+	printf("\tclass_index    = The index of the class in the row of attributes.\n");
+	printf("\tnum_bootstraps = The number of bootstraps done by the algorithm, that\n");
+	printf("\t                 will reflect in the number of trees in the forest.\n");
+	printf("\n\npassing the argument gain as: %s gain\nprints the gains of each node of the test benchmark.\n", filename);
+}
+
 s32 main(s32 argc, s8** argv)
 {
-	File_Data fdata = parse_file((char*)"res/teste2.data", 5, 4);
+	s32 num_bootstraps = 10;
+	s32 num_attribs = 0;
+	s32 class_index = 0;
+	File_Data fdata = {};
+
+	if (argc < 4) {
+		if (argc < 2) {
+			print_usage(argv[0]);
+			return -1;
+		} else {
+			if (strcmp(argv[1], "gain") != 0) {
+				print_usage(argv[0]);
+				return -1;
+			}
+
+			num_bootstraps = 1;
+			num_attribs = 5;
+			class_index = 4;
+			File_Data fdata = parse_file((char*)"../../res/teste.data", 5, 4);
+			print_gain_values = true;
+			Decision_Tree_Node root = {};
+			root.node = &fdata;
+			generate_decision_tree(&root, &fdata, 0);
+			return 0;
+		}
+	} else if(argc == 5) {
+		num_attribs = atoi(argv[2]);
+		class_index = atoi(argv[3]);
+		num_bootstraps = atoi(argv[4]);
+		fdata = parse_file(argv[1], num_attribs, class_index);
+		if (fdata.integrity == false)
+			return -1;
+	} else {
+		print_usage(argv[0]);
+		return -1;
+	}
+
+	//File_Data fdata = parse_file((char*)"res/teste.data", 5, 4);
 	//File_Data fdata = parse_file((char*)"res/haberman.data", 4, 3);
 	//File_Data fdata = parse_file((char*)"res/cmc.data", 10, 9);
+	//File_Data fdata = parse_file((char*)"res/wine.data", 14, 0);
 
-	const s32 num_bootstraps = 10;
-
-	Decision_Tree_Node roots[num_bootstraps] = {};
+	Decision_Tree_Node* roots = (Decision_Tree_Node*)calloc(1, num_bootstraps * sizeof(*roots));
 	// Generate bootstraps
 	Bootstrap* bootstraps = bootstrap(fdata, num_bootstraps);
 	
@@ -99,6 +144,7 @@ s32 main(s32 argc, s8** argv)
 	}
 
 	// Run test for each testing set of each bootstrap
+	r32 sum_accuracy = 0.0f;
 	for (s32 test_boots_index = 0; test_boots_index < num_bootstraps; ++test_boots_index) {
 
 		s32 count_success = 0;
@@ -137,7 +183,11 @@ s32 main(s32 argc, s8** argv)
 			}
 		}
 		free(class_count);
-		printf("Success: %d\nFailure: %d\n\n", count_success, count_failure);
+		r32 accuracy = (r32)count_success / (r32)(count_success + count_failure);
+		printf("Success: %d Failure: %d Accuracy: %f\n", count_success, count_failure, accuracy);
+		sum_accuracy += accuracy;
 	}
+	if(num_bootstraps > 0)
+		printf("Average Accuracy: %f\n", sum_accuracy / (r32)num_bootstraps);
 	return 0;
 }

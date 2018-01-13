@@ -4,6 +4,8 @@
 
 #define internal static
 
+static bool print_gain_values = false;
+
 struct Data_Values {
 	Attribute* max_attribs;		// normal calloc -> free()				array count must be num_attribs
 	Attribute* min_attribs;		// normal calloc -> free()				array count must be num_attribs
@@ -231,15 +233,18 @@ bool calculate_data_gains(File_Data* file_data, Data_Values* data_values, s32* o
 			data_values->biggest_gain_index = a;
 			result = true;
 		}
-		//printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
+		if(print_gain_values)
+			printf("infod info_d_subattrib %d: %f\n", a, info_d - info_d_subattrib);
 	}
 	if (result) {
 		*original_attrib_index = data_values->biggest_gain_index;
-		//printf("Picked %d with gain %f\n", data_values->biggest_gain_index, max_gain);
+		if(print_gain_values)
+			printf("Picked %d with gain %f\n", data_values->biggest_gain_index, max_gain);
 	}
 	else {
 		*original_attrib_index = -1;
-		//printf("Pure node gain 0.0f\n");
+		if(print_gain_values)
+			printf("Pure node gain 0.0f\n");
 	}
 	return result;
 }
